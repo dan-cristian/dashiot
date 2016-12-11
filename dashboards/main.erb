@@ -1,0 +1,61 @@
+<script type='text/javascript'>
+$(function() {
+  // These settings override the defaults set in application.coffee. You can do this on a per dashboard basis.
+  // Dashing.gridsterLayout('[{"col":2,"row":1},{"col":1,"row":1},{"col":3,"row":1},{"col":2,"row":2},{"col":3,"row":2},{"col":1,"row":2},{"col":5,"row":1},{"col":4,"row":2},{"col":2,"row":3}]')
+  Dashing.widget_base_dimensions = [255, 240]
+  Dashing.numColumns = 5
+});
+</script>
+<% content_for :title do %>My super sweet dashboard<% end %>
+<div class="gridster">
+  <ul>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphutility-power rack" data-view="Graphutility" data-title="Power Rack" style="background-color:#ff9618" data-suffix=""></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphutility-power beci" data-view="Graphutility" data-title="Power Beci" style="background-color:#ff9618" data-suffix=""></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphutility-power main" data-view="Graphutility" data-title="Power Main" style="background-color:#ff9618" data-suffix=""></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphutility-water hot" data-view="Graphutility" data-title="Hot Water" style="background-color:#ff0018" data-suffix=""></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphtemp-living" data-view="Graphtemp" data-title="Living" style="background-color:#ff9618" data-suffix="&deg;"></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphtemp-boiler sus" data-view="Graphtemp" data-title="Boiler" style="background-color:#aabb18" data-suffix="&deg;"></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphtemp-bucatarie" data-view="Graphtemp" data-title="Bucatarie" style="background-color:#009618" data-suffix="&deg;"></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphtemp-dormitor" data-view="Graphtemp" data-title="Dormitor" style="background-color:#ff9600" data-suffix="&deg;"></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphtemp-birou" data-view="Graphtemp" data-title="Birou" style="background-color:#ff0018" data-suffix="&deg;"></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphtemp-pod fata" data-view="Graphtemp" data-title="Pod" style="background-color:#f00018" data-suffix="&deg;"></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphtemp-gas heater" data-view="Graphtemp" data-title="Centrala" style="background-color:#a00018" data-suffix="&deg;"></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="2" data-sizey="2">
+		<div data-id="camera1" data-view="Cameras" data-title=""></div>
+	</li>
+	<li data-row="1" data-col="1" data-sizex="2" data-sizey="2">
+		<div data-id="camera2" data-view="Cameras" data-title=""></div>
+	</li>
+	<li data-row="1" data-col="1" data-sizex="2" data-sizey="2">
+		<div data-id="camera3" data-view="Cameras" data-title=""></div>
+	</li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="synergy" data-view="Meter" data-title="Synergy" data-height="200" data-width="200" data-min="0" data-max="100" data-suffix="%"></div>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="valuation" data-view="Number" data-title="Current Valuation" data-moreinfo="In billions" data-prefix="$"></div>
+    </li>
+  </ul>
+  </div>
