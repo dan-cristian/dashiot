@@ -25,6 +25,14 @@ class Dashing.Graphtemp extends Dashing.Widget
       else
         extra
 
+  @accessor 'arrow', ->
+    points = @get('points')
+    if points && points.length >= 3 
+      last = points[points.length - 1].y
+      prev1 = points[points.length - 2].y
+      prev2 = points[points.length - 3].y
+      if last >= prev1 && prev1 >= prev2 then 'fa fa-arrow-up' else 'fa fa-arrow-down'
+
   ready: ->
     container = $(@node).parent()
     # Gross hacks. Let's fix this.
