@@ -2,7 +2,7 @@ require 'mysql2'
 require 'date'
 require 'yaml'
 
-SCHEDULER.every '30s', :first_in => 0 do |job|
+SCHEDULER.every '3m', :first_in => 0 do |job|
   config = YAML.load_file('config.yaml')
   mysql_host = config['mysql_host']
   mysql_user = config['mysql_user']
