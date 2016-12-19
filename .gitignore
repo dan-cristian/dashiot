@@ -1,3 +1,5 @@
 assets/images/cameras
 assets/images/cameras
 Gemfile.lock
+config.yaml
+history.yml
