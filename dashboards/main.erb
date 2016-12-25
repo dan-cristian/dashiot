@@ -2,8 +2,8 @@
 $(function() {
   // These settings override the defaults set in application.coffee. You can do this on a per dashboard basis.
   // Dashing.gridsterLayout('[{"col":2,"row":1},{"col":1,"row":1},{"col":3,"row":1},{"col":2,"row":2},{"col":3,"row":2},{"col":1,"row":2},{"col":5,"row":1},{"col":4,"row":2},{"col":2,"row":3}]')
-  Dashing.widget_base_dimensions = [255, 240]
-  Dashing.numColumns = 5
+  Dashing.widget_base_dimensions = [250, 235]
+  Dashing.numColumns = 7
 });
 </script>
 <% content_for :title do %>My super sweet dashboard<% end %>
@@ -20,6 +20,9 @@ $(function() {
     </li>
     <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
       <div data-id="graphcontact-birou" data-view="Graphcontact" data-title="Birou" style="background-color:#ff9618" data-suffix=""></div>
+    </li>
+<li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="graphcontact-drum" data-view="Graphcontact" data-title="Drum" style="background-color:#ff9618" data-suffix=""></div>
     </li>
     <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
       <div data-id="graphutility-power rack" data-view="Graphutility" data-title="Power Rack" style="background-color:#ff9618" data-suffix=""></div>
@@ -57,13 +60,13 @@ $(function() {
     <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
       <div data-id="graphtemp-gas heater" data-view="Graphtemp" data-title="Centrala" style="background-color:#a00018" data-suffix="&deg;"></div>
     </li>
-    <li data-row="1" data-col="1" data-sizex="2" data-sizey="2">
+    <li data-row="1" data-col="1" data-sizex="2" data-sizey="1">
 		<div data-id="camera1" data-view="Cameras" data-title=""></div>
 	</li>
-	<li data-row="1" data-col="1" data-sizex="2" data-sizey="2">
+	<li data-row="1" data-col="1" data-sizex="2" data-sizey="1">
 		<div data-id="camera2" data-view="Cameras" data-title=""></div>
 	</li>
-	<li data-row="1" data-col="1" data-sizex="2" data-sizey="2">
+	<li data-row="1" data-col="1" data-sizex="2" data-sizey="1">
 		<div data-id="camera3" data-view="Cameras" data-title=""></div>
 	</li>
   </ul>
