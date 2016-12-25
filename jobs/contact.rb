@@ -18,16 +18,16 @@ SCHEDULER.every '1m', :first_in => 0 do |job|
   "
   
   main_rows = db.query(sql)
-  
   main_items = main_rows.map do |row|
     main_name = row['zone_name']
     main_date = row['updated_on']
     
     puts "Contact zone=#{main_name}"
     sql = "
-    SELECT count(*) AS count, MAX(updated_on) as updated_on
+    SELECT count(*) AS count, MAX(updated_on) as updated_on 
     FROM presence_history 
-    WHERE zone_name='" + main_name + "' AND updated_on >= CURDATE() AND is_connected=0
+    WHERE zone_name='" + main_name + 
+    "' AND updated_on >= CURDATE() AND is_connected=0
     GROUP BY hour(updated_on)
     ORDER BY hour(updated_on)
     "

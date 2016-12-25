@@ -31,7 +31,7 @@ class Dashing.Graphcontact extends Dashing.Widget
       element: @node
       width: width
       height: height
-      renderer: "line"
+      renderer: "bar"
       #renderer: @get("graphtype")
       series: [
         {
