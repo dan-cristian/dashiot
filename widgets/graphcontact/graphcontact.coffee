@@ -21,7 +21,52 @@ class Dashing.Graphcontact extends Dashing.Widget
       seconds = delta % 60
       "#{minutes}m#{seconds}s"
 
-    
+  @accessor 'status-cam', ->
+    if @get('event_type') == 'cam'
+      if @get('is_connected') == 1
+        status = "CAM-OK" 
+      else
+        status = "CAM-MOVE"
+      "#{status}"
+    else
+      "-"
+
+  @accessor 'status-pir', ->
+    if @get('event_type') == 'pir'
+      if @get('is_connected') == 1
+        status = "PIR-OK" 
+      else
+        status = "PIR-MOVE"
+      "#{status}"
+    else
+      "-"
+
+  @accessor 'status-contact', ->
+    console.log("Request status contact " + @get('zone_name'))
+    status = "+"
+    index = 0
+    if @get('sensors')
+      parent = $(@node).find("contact-1")
+      for sensor in @get('sensors')
+          is_connected = sensor['is_connected']
+          event_type = sensor['event_type']
+          updated_on = sensor['updated_on']
+          sensor_name = sensor['sensor_name']
+          if event_type == 'contact'
+            status = status + sensor_name + is_connected + " "
+    status
+
+  @accessor 'status-contact2', ->
+    if @get('event_type') == 'contact'
+      if @get('is_connected') == 1
+        status = "IO-CLOSED" 
+      else
+        status = "IO-OPEN"
+      "#{status}"
+    else
+      "-"
+
+
   ready: ->
     container = $(@node).parent()
     # Gross hacks. Let's fix this.
@@ -41,14 +86,14 @@ class Dashing.Graphcontact extends Dashing.Widget
       ]
       padding: {top: 0.02, left: 0.02, right: 0.02, bottom: 0.02}
     )
-
     @graph.series[0].data = @get('points') if @get('points')
-
     x_axis = new Rickshaw.Graph.Axis.Time(graph: @graph)
     y_axis = new Rickshaw.Graph.Axis.Y(graph: @graph, tickFormat: Rickshaw.Fixtures.Number.formatKMBT)
     @graph.render()
 
   onData: (data) ->
-    if @graph
+    console.log("OnData started " + @get('zone_name'))
+    if @graph && data.points
       @graph.series[0].data = data.points
       @graph.render()
+    

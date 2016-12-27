@@ -1,7 +1,7 @@
 require 'mysql2'
 require 'date'
 
-SCHEDULER.every '1m', :first_in => 0 do |job|
+SCHEDULER.every '5m', :first_in => 0 do |job|
   config = YAML.load_file('config.yaml')
   mysql_host = config['mysql_host']
   mysql_user = config['mysql_user']
@@ -22,7 +22,7 @@ SCHEDULER.every '1m', :first_in => 0 do |job|
     main_name = row['zone_name']
     main_date = row['updated_on']
     
-    puts "Contact zone=#{main_name}"
+    puts "Contact graph zone=#{main_name}"
     sql = "
     SELECT count(*) AS count, MAX(updated_on) as updated_on 
     FROM presence_history 
@@ -40,31 +40,10 @@ SCHEDULER.every '1m', :first_in => 0 do |job|
       points << { x: x_value, y: y_value }
     end
     
-    sql = "
-    SELECT * FROM presence_history 
-    where zone_name='" + main_name + "'
-    order by id desc limit 1
-    "
-    detail_rows = db.query(sql)
-    if detail_rows.count > 0
-      is_connected = detail_rows.first['is_connected']
-      if detail_rows.first['event_io_date']
-        event_type='IO'
-      else
-        if detail_rows.first['event_camera_date']
-          event_type='CAM'
-        else
-          event_type='N/A'
-        end
-      end
-    else
-      puts "Warning no presence rows for zone " + main_name
-    end
     
     # Update the widget
     if second_rows.count > 0
-      puts "Contact #{main_name} type #{event_type} connected=#{is_connected}"
-      send_event('graphcontact-'+ main_name, points: points, event_type: event_type, is_connected: is_connected)
+      send_event('graphcontact-'+ main_name, points: points, zone_name: main_name)
     else
       puts "Warning no presence rows today for zone " + main_name
     end

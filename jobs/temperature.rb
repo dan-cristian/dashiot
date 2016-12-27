@@ -11,7 +11,11 @@ SCHEDULER.every '3m', :first_in => 0 do |job|
   # Myql connection
   db = Mysql2::Client.new(:host => mysql_host, :username => mysql_user, :password => mysql_pass, :port => 3306, :database => "haiot-reporting" )
 
-  sql = "SELECT DISTINCT(sensor_name) FROM sensor_history"
+  sql = '
+  SELECT DISTINCT(sensor_name) 
+  FROM sensor_history 
+  WHERE updated_on >= CURDATE() - 5
+  '
   sensor_rows = db.query(sql)
   
   sensor_items = sensor_rows.map do |row|

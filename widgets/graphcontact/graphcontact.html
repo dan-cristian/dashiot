@@ -1,7 +1,25 @@
-<h1 class="title" data-bind="title"></h1>
-
-<I class="value" data-bind="current | prepend prefix | append suffix"></I>
-
-<P class="value" data-bind="updateon"></P>
-
-<p class="more-info" data-bind="moreinfo"></p>
+<table>
+    <tr>
+        <td><P class="value" data-bind="status-cam"></P></td>
+        <td><P class="value" data-bind="status-pir"></P></td>
+        <td><P class="value" id="contact-1" data-bind="status-contact"></P></td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td></td>
+        <td><h1 class="title" data-bind="title"></h1></td>
+        <td></td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td><I class="value" data-bind="current | prepend prefix | append suffix"></I></td>
+    </tr>
+    <tr>
+        <td>
+            <P class="value" data-bind="updateon"></P>
+            <p class="more-info" data-bind="moreinfo"></p>
+        </td>
+    </tr>
+</table>
