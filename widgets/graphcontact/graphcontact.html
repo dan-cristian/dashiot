@@ -1,9 +1,19 @@
 <table>
     <tr>
-        <td><P class="value" data-bind="status-cam"></P></td>
-        <td><P class="value" data-bind="status-pir"></P></td>
-        <td><P class="value" id="contact-1" data-bind="status-contact"></P></td>
+        <td><span class="value" data-bind="status-cam | raw"></span>
+            <span data-showif="status-cam-state | equals 'recent'" 
+            class="value" data-bind="status-cam-recent | raw" style="background-color:orange"></span>
+        </td>
+        <td><span class="value" data-bind="status-pir | raw"></span>
+            <span data-showif="status-pir-state | equals 'recent'" 
+            class="value" data-bind="status-pir-recent | raw" style="background-color:orange"></span>
+        </td>
+        <td><span class="value" data-bind="status-contact | raw"></span>
+            <span data-showif="status-contact-state | equals 'open'" 
+            class="value" data-bind="status-contact-open | raw" style="background-color:red"></span>
+        </td>
     </tr>
+    <tr><td>&nbsp;</td></tr>
 </table>
 <table>
     <tr>

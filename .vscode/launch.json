@@ -2,6 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug App",
+            "type": "Ruby",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "program": "smashing-1.0.0/lib/dashing/app.rb"
+        },
+        {
             "name": "Debug Local File",
             "type": "Ruby",
             "request": "launch",

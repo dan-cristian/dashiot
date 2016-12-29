@@ -20,52 +20,70 @@ class Dashing.Graphcontact extends Dashing.Widget
       minutes = Math.floor((delta % 3600) / 60)
       seconds = delta % 60
       "#{minutes}m#{seconds}s"
+  
 
-  @accessor 'status-cam', ->
-    if @get('event_type') == 'cam'
-      if @get('is_connected') == 1
-        status = "CAM-OK" 
-      else
-        status = "CAM-MOVE"
-      "#{status}"
-    else
-      "-"
-
-  @accessor 'status-pir', ->
-    if @get('event_type') == 'pir'
-      if @get('is_connected') == 1
-        status = "PIR-OK" 
-      else
-        status = "PIR-MOVE"
-      "#{status}"
-    else
-      "-"
-
-  @accessor 'status-contact', ->
-    console.log("Request status contact " + @get('zone_name'))
-    status = "+"
-    index = 0
+  contact_status: (contact_type) ->
+    status = ""
+    recent_move = false
     if @get('sensors')
-      parent = $(@node).find("contact-1")
       for sensor in @get('sensors')
           is_connected = sensor['is_connected']
           event_type = sensor['event_type']
           updated_on = sensor['updated_on']
           sensor_name = sensor['sensor_name']
-          if event_type == 'contact'
-            status = status + sensor_name + is_connected + " "
+          age = sensor['age']
+          if event_type == contact_type
+            # http://stackoverflow.com/questions/658044/tick-symbol-in-html-xhtml
+            if age > 60
+              symbol = '&#10004;' # check ok
+            else
+              symbol = '&#10008;' # open, not ok
+              recent_move = true
+            status = status + symbol + age + " "
+            safe = safe & is_connected
+            if recent_move
+              # https://github.com/aelse/dashing-health/blob/master/widgets/health/health.html
+              @set 'status-' + contact_type + '-state', 'recent'
+              @set 'status-' + contact_type + '-recent',  sensor_name
+    if !recent_move
+      @set 'status-' + contact_type + '-state', 'closed'
     status
 
-  @accessor 'status-contact2', ->
-    if @get('event_type') == 'contact'
-      if @get('is_connected') == 1
-        status = "IO-CLOSED" 
-      else
-        status = "IO-OPEN"
-      "#{status}"
-    else
-      "-"
 
+  @accessor 'status-cam', ->
+    @contact_status('cam')
+
+  @accessor 'status-pir', ->
+    @contact_status('pir')
+    
+    
+
+  @accessor 'status-contact', ->
+    status = ""
+    safe = 1
+    if @get('sensors')
+      for sensor in @get('sensors')
+          is_connected = sensor['is_connected']
+          event_type = sensor['event_type']
+          updated_on = sensor['updated_on']
+          sensor_name = sensor['sensor_name']
+          age = sensor['age']
+          if event_type == 'contact'
+            # http://stackoverflow.com/questions/658044/tick-symbol-in-html-xhtml
+            if is_connected == 1
+              symbol = '&#10004;' # check ok
+            else
+              symbol = '&#10008;' # open, not ok
+            status = status + symbol + " "
+            safe = safe & is_connected
+            # fix: only last sensor is shown
+            if safe == 0
+              # https://github.com/aelse/dashing-health/blob/master/widgets/health/health.html
+              @set 'status-contact-state', 'open'
+              @set 'status-contact-open',  sensor_name + ' ' + age + 'm '
+    if safe == 1
+      @set 'status-contact-state', 'closed'
+    status
 
   ready: ->
     container = $(@node).parent()

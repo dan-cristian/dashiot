@@ -18,18 +18,30 @@ def my_job()
   WHERE updated_on >= CURDATE() - 5
   ORDER BY zone_name
   "
+
+  hrows = [
+    { cols: [ {value: 'Sensor'},
+      {value: 'Type'},
+      {value: 'Status'},
+      {value: 'Age'}
+    ] }
+  ]
+
   zone_prev = ""
   zone_name = ""
   sensors = []
+  table_array = Array.new
   main_rows = db.query(sql)
   main_items = main_rows.map do |row|
     zone_name = row['zone_name']
     sensor_name = row['sensor_name']
 
     if zone_name != zone_prev
-      if zone_prev != ""
+      if zone_prev != ''
         send_event('graphcontact-' + zone_prev, zone_name: zone_prev, sensors: sensors)
+        send_event('tablecontact-' + zone_name, hrows: hrows, rows: table_array, zone_name: zone_name)
       end
+      table_array = Array.new
       sensors = []
       zone_prev = zone_name
     end  
@@ -41,11 +53,20 @@ def my_job()
     ORDER BY id DESC LIMIT 1
     "
     detail_rows = db.query(sql)
+    
     if detail_rows.count > 0
       is_connected = detail_rows.first['is_connected']
       event_type = detail_rows.first['event_type']
       updated_on = detail_rows.first['updated_on']
-      sensors << { sensor_name: sensor_name, event_type: event_type, is_connected: is_connected, updated_on: updated_on}
+      age = (Time.now - updated_on.to_i).to_i / 60
+      sensors << { sensor_name: sensor_name, event_type: event_type, is_connected: is_connected, updated_on: updated_on, age: age}
+
+      table_line = { cols: [ {value: "#{sensor_name}"},
+        {value: "#{event_type}"},
+        {value: "#{is_connected}"},
+        {value: "#{age}"}
+      ] }
+      table_array.push(table_line)
       puts "Zone #{zone_name} sensor #{sensor_name} conn=#{is_connected} type #{event_type} update #{updated_on}"
     else
       puts "Warning no presence rows for zone #{zone_name} sensor #{sensor_name}"
@@ -53,6 +74,7 @@ def my_job()
   end # main_items
   # send last
   send_event('graphcontact-' + zone_name, zone_name: zone_name, sensors: sensors)
+  send_event('tablecontact-' + zone_name, hrows: hrows, rows: table_array, zone_name: zone_name)
 end
 
 
