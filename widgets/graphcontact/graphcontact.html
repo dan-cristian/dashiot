@@ -1,16 +1,31 @@
 <table>
     <tr>
-        <td><span class="value" data-bind="status-cam | raw"></span>
+        <td>
+            <span data-showif="status-cam-exists | equals 'true'">
+                <img src="/assets/icons/video-camera-24.png">
+                <span class="value" data-bind="status-cam | raw"></span>
+            </span>
             <span data-showif="status-cam-state | equals 'recent'" 
-            class="value" data-bind="status-cam-recent | raw" style="background-color:orange"></span>
+                class="value" data-bind="status-cam-recent | raw" style="background-color:orange">
+            </span>
         </td>
-        <td><span class="value" data-bind="status-pir | raw"></span>
+        <td>
+            <span data-showif="status-pir-exists | equals 'true'">
+                <img src="/assets/icons/pir-32.png">
+                <span class="value" data-bind="status-pir | raw"></span>
+            </span>
             <span data-showif="status-pir-state | equals 'recent'" 
-            class="value" data-bind="status-pir-recent | raw" style="background-color:orange"></span>
+                class="value" data-bind="status-pir-recent | raw" style="background-color:orange">
+            </span>
         </td>
-        <td><span class="value" data-bind="status-contact | raw"></span>
+        <td>
+            <span data-showif="status-contact-exists | equals 'true'">
+                <img src="/assets/icons/door-closed-32.png">
+                <span class="value" data-bind="status-contact | raw"></span>
+            </span>
             <span data-showif="status-contact-state | equals 'open'" 
-            class="value" data-bind="status-contact-open | raw" style="background-color:red"></span>
+                class="value" data-bind="status-contact-open | raw" style="background-color:red">
+            </span>
         </td>
     </tr>
     <tr><td>&nbsp;</td></tr>

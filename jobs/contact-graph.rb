@@ -27,7 +27,7 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
     SELECT count(*) AS count, MAX(updated_on) as updated_on 
     FROM presence_history 
     WHERE zone_name='" + main_name + 
-    "' AND updated_on >= CURDATE() AND is_connected=0
+    "' AND updated_on >= CURDATE()
     GROUP BY hour(updated_on)
     ORDER BY hour(updated_on)
     "

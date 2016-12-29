@@ -42,7 +42,8 @@ class Dashing.Graphtemp extends Dashing.Widget
       element: @node
       width: width
       height: height
-      renderer: @get("graphtype")
+      renderer: "line"
+      #renderer: @get("graphtype")
       series: [
         {
         color: "#fff",
