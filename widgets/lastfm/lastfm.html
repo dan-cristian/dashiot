@@ -1,6 +1,13 @@
 <i class="title" data-bind="title"></i>
 [<i class="status" data-bind="status"></i>]
 <img style="max-height: 96px; width: auto" data-bind-src="cover"/>
+<span data-showif="is-loved | equals '1'">
+  <img src="/assets/icons/music-heart-48.png">
+</span>
+<span data-showif="is-loved | equals '0'">
+  <a href="#"><img src="/assets/icons/empty-heart-48.png"></a>
+</span>
+<!--span class="loved" data-bind="loved"></span-->
 <p>
 <span class="track" data-bind="track"></span>
 -
