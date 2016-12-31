@@ -63,3 +63,9 @@ class Dashing.Graphtemp extends Dashing.Widget
     if @graph
       @graph.series[0].data = data.points
       @graph.render()
+    extra = @get('tag')
+    if extra == 1
+      @set 'is-heat-on', 'true'
+    else
+      if extra == 0
+        @set 'is-heat-on', 'false'

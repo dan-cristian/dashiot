@@ -2,27 +2,33 @@ require 'net/http'
 require 'yaml'
 require 'fileutils'
  
-@cameraDelay = 1 # Needed for image sync. 
-@fetchNewImageEvery = '15s'
+@cameraDelay = 1 # Needed for image sync
+@fetchNewImageEvery = '10s'
 
-@camera1Host = "192.168.0.28"  ## CHANGE
-@camera1Port = "80"  ## CHANGE
+@camera1Host = "192.168.0.28"
+@camera1Port = "80"
 @camera1URL = "/Streaming/channels/1/picture"
 @newFile1 = "assets/images/cameras/snapshot1_new.jpeg"
 @oldFile1 = "assets/images/cameras/snapshot1_old.jpeg"
 
-@camera2Host = "192.168.0.23"  ## CHANGE
-@camera2Port = "80"  ## CHANGE
+@camera2Host = "192.168.0.23"
+@camera2Port = "80"
 @camera2URL = "/Streaming/channels/1/picture"
 @newFile2 = "assets/images/cameras/snapshot2_new.jpeg"
 @oldFile2 = "assets/images/cameras/snapshot2_old.jpeg"
 
-@camera3Host = "192.168.0.22"  ## CHANGE
-@camera3Port = "80"  ## CHANGE
+@camera3Host = "192.168.0.22"
+@camera3Port = "80"
 @camera3URL = "/Streaming/channels/1/picture"
 @newFile3 = "assets/images/cameras/snapshot3_new.jpeg"
 @oldFile3 = "assets/images/cameras/snapshot3_old.jpeg"
 
+
+@camera4Host = "192.168.0.26"
+@camera4Port = "80"
+@camera4URL = "/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=<user>&pwd=<password>"
+@newFile4 = "assets/images/cameras/snapshot4_new.jpeg"
+@oldFile4 = "assets/images/cameras/snapshot4_old.jpeg"
  
 def fetch_image(host, old_file, new_file, cam_port, cam_user, cam_pass, cam_url)
 	if File.exist?(old_file)
@@ -34,7 +40,9 @@ def fetch_image(host, old_file, new_file, cam_port, cam_user, cam_pass, cam_url)
 		FileUtils.mv(new_file, old_file)
 		#`mv #{new_file} #{old_file}`
 	end
-	Net::HTTP.start(host,cam_port) do |http|
+	Net::HTTP.start(host, cam_port) do |http|
+		cam_url = cam_url.sub '<user>', cam_user
+		cam_url = cam_url.sub '<password>', cam_pass
 		req = Net::HTTP::Get.new(cam_url)
 		if cam_user != "None" ## if username for any particular camera is set to 'None' then assume auth not required.
 			req.basic_auth cam_user, cam_pass
@@ -59,21 +67,26 @@ SCHEDULER.every @fetchNewImageEvery, first_in: 0 do
   campass2 = config['campass2']
   camuser3 = config['camuser3']
   campass3 = config['campass3']
+  camuser4 = config['camuser4']
+  campass4 = config['campass4']
   
   
 	new_file1 = fetch_image(@camera1Host,@oldFile1,@newFile1,@camera1Port,camuser1,campass1,@camera1URL)
 	new_file2 = fetch_image(@camera2Host,@oldFile2,@newFile2,@camera2Port,camuser2,campass2,@camera2URL)
 	new_file3 = fetch_image(@camera3Host,@oldFile3,@newFile3,@camera3Port,camuser3,campass3,@camera3URL)
+	new_file4 = fetch_image(@camera4Host,@oldFile4,@newFile4,@camera4Port,camuser4,campass4,@camera4URL)
 
-	if not File.exists?(@newFile1 && @newFile2 && @newFile3)
+	if not File.exists?(@newFile1 && @newFile2 && @newFile3 && @newFile4)
 		warn "Failed to Get Camera Image"
 	end
  
 	send_event('camera1', image: make_web_friendly(@oldFile1))
 	send_event('camera2', image: make_web_friendly(@oldFile2))
 	send_event('camera3', image: make_web_friendly(@oldFile3))
+	send_event('camera4', image: make_web_friendly(@oldFile4))
 	sleep(@cameraDelay)
 	send_event('camera1', image: make_web_friendly(new_file1))
 	send_event('camera2', image: make_web_friendly(new_file2))
 	send_event('camera3', image: make_web_friendly(new_file3))
+	send_event('camera4', image: make_web_friendly(new_file4))
 end
