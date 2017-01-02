@@ -5,7 +5,7 @@
 #= require_directory .
 #= require_tree ../../widgets
 
-console.log("Yeah! The dashboard has started!")
+console.log("Yeah! The dashboard has started! v1")
 
 Dashing.on 'ready', ->
   Dashing.widget_margins ||= [5, 5]
@@ -20,6 +20,11 @@ Dashing.on 'ready', ->
       widget_margins: Dashing.widget_margins
       widget_base_dimensions: Dashing.widget_base_dimensions
       avoid_overlapped_widgets: !Dashing.customGridsterLayout
-      draggable:
-        stop: Dashing.showGridsterInstructions
-        start: -> Dashing.currentWidgetPositions = Dashing.getWidgetPositions()
+      #disable gridg drag: https://github.com/Shopify/dashing/issues/94
+      items: "none"
+      #draggable:
+      #  stop: Dashing.showGridsterInstructions
+      #  start: -> Dashing.currentWidgetPositions = Dashing.getWidgetPositions()
+    #disable gridg drag
+    #if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) )
+    #$(".gridster ul:first").gridster().data('gridster').draggable().disable();

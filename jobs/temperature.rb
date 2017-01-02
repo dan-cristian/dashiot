@@ -14,7 +14,7 @@ SCHEDULER.every '3m', :first_in => 0 do |job|
   sql = '
   SELECT DISTINCT(sensor_name) 
   FROM sensor_history 
-  WHERE updated_on >= CURDATE() - 5
+  WHERE updated_on >= CURDATE()
   '
   sensor_rows = db.query(sql)
   

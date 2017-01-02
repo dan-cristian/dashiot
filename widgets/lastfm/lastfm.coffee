@@ -10,3 +10,6 @@ class Dashing.lastfm extends Dashing.Widget
     # You can access the html node of this widget with `@node`
     # $(@node).fadeOut().fadeIn()
     @set 'is-loved', data.loved
+
+  onClick: (event) ->
+  	console.log("Click event: " + event)
