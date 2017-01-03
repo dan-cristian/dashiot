@@ -38,7 +38,7 @@ def my_job()
   main_items = main_rows.map do |row|
     zone_name = row['zone_name']
     sensor_name = row['sensor_name']
-    puts "Contact status zone=#{zone_name} sensor=#{sensor_name}"
+    # puts "Contact status zone=#{zone_name} sensor=#{sensor_name}"
     if zone_name != zone_prev
       if zone_prev != ''
         send_event('graphcontact-' + zone_prev, zone_name: zone_prev, sensors: sensors)
@@ -71,7 +71,7 @@ def my_job()
           {value: "#{age}"}
         ] }
         table_array.push(table_line)
-        puts "Zone #{zone_name} sensor #{sensor_name} conn=#{is_connected} type #{event_type} update #{updated_on}"
+        # puts "Zone #{zone_name} sensor #{sensor_name} conn=#{is_connected} type #{event_type} update #{updated_on}"
       else
         puts "Warning no presence rows for zone #{zone_name} sensor #{sensor_name}"
       end

@@ -1,11 +1,14 @@
-<i class="title" data-bind="title"></i>
+<span data-showif="nowplaying | equals 'true'">
+  <img id="music_playing" src="/assets/icons/music-playing.gif"/>
+</span>
+
 [<i class="status" data-bind="status"></i>]
 <img style="max-height: 96px; width: auto" data-bind-src="cover"/>
-<span data-showif="is-loved | equals '1'">
-  <img src="/assets/icons/music-heart-48.png">
+<span data-showif="is_loved | equals '1'">
+  <a href='#'><img id="full-heart" src="/assets/icons/music-heart-48.png"/></a>
 </span>
-<span data-showif="is-loved | equals '0'">
-  <a href="#"><img src="/assets/icons/empty-heart-48.png"></a>
+<span data-showif="is_loved | equals '0'">
+  <img id="empty-heart" src="/assets/icons/empty-heart-48.png"/>
 </span>
 <!--span class="loved" data-bind="loved"></span-->
 <p>

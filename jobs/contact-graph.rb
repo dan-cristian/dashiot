@@ -22,7 +22,7 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
     main_name = row['zone_name']
     main_date = row['updated_on']
     
-    puts "Contact graph zone=#{main_name}"
+    # puts "Contact graph zone=#{main_name}"
     sql = "
     SELECT count(*) AS count, MAX(updated_on) as updated_on 
     FROM presence_history 

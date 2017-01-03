@@ -20,7 +20,7 @@ SCHEDULER.every '3m', :first_in => 0 do |job|
   
   sensor_items = sensor_rows.map do |row|
     sensor_name = row['sensor_name']
-    puts "Sensor=" + sensor_name
+    #puts "Sensor=" + sensor_name
     sql = "
     SELECT id, temperature, updated_on FROM sensor_history 
     WHERE sensor_name='" + sensor_name + "' AND temperature is not NULL  

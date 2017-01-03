@@ -20,11 +20,11 @@ Dashing.on 'ready', ->
       widget_margins: Dashing.widget_margins
       widget_base_dimensions: Dashing.widget_base_dimensions
       avoid_overlapped_widgets: !Dashing.customGridsterLayout
-      #disable gridg drag: https://github.com/Shopify/dashing/issues/94
-      items: "none"
-      #draggable:
-      #  stop: Dashing.showGridsterInstructions
-      #  start: -> Dashing.currentWidgetPositions = Dashing.getWidgetPositions()
+      draggable:
+        stop: Dashing.showGridsterInstructions
+        start: -> Dashing.currentWidgetPositions = Dashing.getWidgetPositions()
+        #http://stackoverflow.com/questions/30513122/is-there-a-way-to-disable-dragdrop-in-dashing
+        items: "none"
     #disable gridg drag
     #if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) )
     #$(".gridster ul:first").gridster().data('gridster').draggable().disable();
