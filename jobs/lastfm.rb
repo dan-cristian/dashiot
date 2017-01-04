@@ -58,14 +58,13 @@ post '/lastfm/love' do
 	artist = $song['artist']['content']
 	track = $song['name']
 	love_song(artist, track)
+	update_lastfm()
 end
 
 #init_session()
 #love_song('FARIUS', 'Brave One')
 
-
-SCHEDULER.every '20s', :first_in => 0 do |job|
-	run_start = Time.now
+def update_lastfm()
 	if $api_key.nil?
 		get_params()
 	end
@@ -90,9 +89,15 @@ SCHEDULER.every '20s', :first_in => 0 do |job|
 		else
 			loved = -1
 		end
+		puts "Lastfm song #{$song['artist']['content']} - #{$song['name']}"
 		send_event('lastfm', { :status => 'ok', :cover => image, :artist => $song['artist']['content'], 
 			:track => $song['name'], :nowplaying => nowplaying, :loved => loved})
 	end
+end
+
+SCHEDULER.every '20s', :first_in => 0 do |job|
+	run_start = Time.now
+	update_lastfm()
 	elapsed = (Time.now - run_start).to_i
 	puts "Lastfm duration=#{elapsed} seconds"
 end

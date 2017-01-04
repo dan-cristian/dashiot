@@ -1,57 +1,64 @@
 <table border=1>
   <tr>
-    <td id="mpd:living">
+    <td class="zone-name" id="mpd:living">
       living
     </td>
-    <td id="cmd:prev">
-      Prev
+    <td class="command" id="cmd:previous">
+      previous
     </td>
-    <td id="cmd:toggle">
-      Play/Pause
+    <td class="command" id="cmd_cust:toggle" data-bind="mpd_playstate | raw">
+      <span data-showif="mpd_playstate | equals 'playing'">
+        pause
+      </span>
+      <span data-showif="mpd_playstate | equals 'paused'">
+        resume
+      </span>
+      <span data-showif="mpd_playstate | equals 'stopped'">
+        play
+      </span>
+      Play/Pause/Resume
     </td>
-    <td id="cmd:next">
-      Next
+    <td class="command" id="cmd:next">
+      next
     </td>
     <td id="output:living">
-      o o o o o o
+      5.1
     </td>
   </tr>
   <tr>
-    <td id="mpd:headset">
+    <td class="zone-name" id="mpd:headset">
       headset
     </td>
-    <td id="cmd:repeat">
-      Repeat
+    <td class="command" id="cmd_cust:repeat">
+      repeat <span data-bind="mpd_repeat | raw"></span>
     </td>
     <td>
     </td>
-    <td id="cmd:random">
-      Random
+    <td class="command" id="cmd_cust:random">
+      random <span data-bind="mpd_random | raw"></span>
     </td>
     <td id="output:headset">
-      o-o
+      2.0
     </td>
   </tr>
   <tr>
-    <td id="mpd:beci">
+    <td class="zone-name" id="mpd:beci">
       beci
     </td>
     <td>
-      tbc
     </td>
     <td>
       Album Art
     </td>
-    <td id="cmd:love">
-      Love/Unlove
+    <td>
     </td>
     <td id="output:beci">
-      o o
+      2.0
     </td>
   </tr>
   <tr>
-    <td>
-      Zone mpd 4
+    <td class="zone-name" id="mpd:dormitor">
+      dormitor
     </td>
     <td>
     </td>
@@ -60,39 +67,38 @@
     <td>
     </td>
     <td>
-      Zone out 4
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Zone mpd 5
-    </td>
-    <td>
-    </td>
-    <td>
-      Mute
-    </td>
-    <td>
-    </td>
-    <td>
-      Zone out 5
+      5.0
     </td>
   </tr>
   <tr>
-    <td>
-      Zone mpd 6
+    <td class="zone-name" id="mpd:baie">
+      baie
     </td>
     <td>
-      Vol-
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+      2.0
+    </td>
+  </tr>
+  <tr>
+    <td class="zone-name" id="mpd:pod">
+      pod
+    </td>
+    <td class="command" id="cmd_cust:volume_down">
+      vol-
     </td>
     <td class="value" data-bind="mpd_volume | raw">
-      vol level
+      volume level
+    </td>
+    <td class="command" id="cmd_cust:volume_up">
+      vol+
     </td>
     <td>
-      Vol+
-    </td>
-    <td>
-      Zone out 6
+      5.0
     </td>
   </tr>
 </table>
