@@ -112,7 +112,7 @@ class Dashing.Graphcontact extends Dashing.Widget
     @graph.render()
 
   onData: (data) ->
-    console.log("OnData started " + @get('zone_name'))
+    #console.log("OnData started " + @get('zone_name'))
     if @graph && data.points
       @graph.series[0].data = data.points
       @graph.render()

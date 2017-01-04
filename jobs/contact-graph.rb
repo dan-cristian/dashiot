@@ -2,6 +2,7 @@ require 'mysql2'
 require 'date'
 
 SCHEDULER.every '5m', :first_in => 0 do |job|
+  run_start = Time.now
   config = YAML.load_file('config.yaml')
   mysql_host = config['mysql_host']
   mysql_user = config['mysql_user']
@@ -48,4 +49,6 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
       puts "Warning no presence rows today for zone " + main_name
     end
   end
+  elapsed = (Time.now - run_start).to_i
+  puts "Contact-graph duration=#{elapsed} seconds"
 end

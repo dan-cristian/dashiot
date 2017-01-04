@@ -2,6 +2,7 @@ require 'mysql2'
 require 'date'
 
 SCHEDULER.every '5m', :first_in => 0 do |job|
+  run_start = Time.now
   config = YAML.load_file('config.yaml')
   mysql_host = config['mysql_host']
   mysql_user = config['mysql_user']
@@ -24,7 +25,7 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
     unit_name = row['unit_name']
     day_total_units = row['day_total_units'].round(1)
     
-    puts "Sensor=#{sensor_name} #{unit_name} #{day_total_units}"
+    #puts "Sensor=#{sensor_name} #{unit_name} #{day_total_units}"
     sql = "
     SELECT HOUR(updated_on) as hour, SUM(units_delta) as units, MAX(updated_on) as updated_on 
     FROM utility_history
@@ -48,4 +49,6 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
       send_event('graphutility-'+ sensor_name, points: points, day_total_units: day_total_units, unit_name: unit_name)
     end
   end
+  elapsed = (Time.now - run_start).to_i
+  puts "Utility duration=#{elapsed} seconds"
 end

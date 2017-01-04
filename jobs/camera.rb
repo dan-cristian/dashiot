@@ -60,6 +60,7 @@ def make_web_friendly(file)
 end
  
 SCHEDULER.every @fetchNewImageEvery, first_in: 0 do
+  run_start = Time.now
   config = YAML.load_file('config.yaml')
   camuser1 = config['camuser1']
   campass1 = config['campass1']
@@ -89,4 +90,6 @@ SCHEDULER.every @fetchNewImageEvery, first_in: 0 do
 	send_event('camera2', image: make_web_friendly(new_file2))
 	send_event('camera3', image: make_web_friendly(new_file3))
 	send_event('camera4', image: make_web_friendly(new_file4))
+	elapsed = (Time.now - run_start).to_i
+	puts "Camera duration=#{elapsed} seconds"
 end

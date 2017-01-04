@@ -5,7 +5,7 @@ require 'json'
 server = "http://api.forismatic.com"
 
 SCHEDULER.every '4h', :first_in => 0 do |job|
-
+	run_start = Time.now
 	url = URI.parse("#{server}/api/1.0/?method=getQuote&key=&format=json&lang=en")
 	req = Net::HTTP::Get.new(url.to_s)
 	res = Net::HTTP.start(url.host, url.port) {|http|
@@ -17,5 +17,6 @@ SCHEDULER.every '4h', :first_in => 0 do |job|
 	
 	# Update the dashboard
 	send_event("quote", { text: j['quoteText'], moreinfo: j['quoteAuthor'] })
-	
+	elapsed = (Time.now - run_start).to_i
+	puts "Quote duration=#{elapsed} seconds"
 end

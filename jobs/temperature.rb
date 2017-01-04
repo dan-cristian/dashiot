@@ -3,6 +3,7 @@ require 'date'
 require 'yaml'
 
 SCHEDULER.every '3m', :first_in => 0 do |job|
+  run_start = Time.now
   config = YAML.load_file('config.yaml')
   mysql_host = config['mysql_host']
   mysql_user = config['mysql_user']
@@ -58,4 +59,6 @@ SCHEDULER.every '3m', :first_in => 0 do |job|
       send_event('graphtemp-'+ sensor_name, points: points, tag: heatison)
     end
   end
+  elapsed = (Time.now - run_start).to_i
+  puts "Temperature duration=#{elapsed} seconds"
 end
