@@ -1,110 +1,130 @@
+<!-- icons from http://www.iconarchive.com/show/audio-video-outline-icons-by-danieledesantis.html -->
 <table border=1>
   <tr>
-    <td class="zone-name" id="mpd:living">
-      living
-    </td>
-    <td class="command" id="cmd:previous">
-      previous
-    </td>
-    <td class="command" id="cmd_cust:toggle" data-bind="mpd_playstate | raw">
-      <span data-showif="mpd_playstate | equals 'playing'">
-        pause
-      </span>
-      <span data-showif="mpd_playstate | equals 'paused'">
-        resume
-      </span>
-      <span data-showif="mpd_playstate | equals 'stopped'">
-        play
-      </span>
-      Play/Pause/Resume
-    </td>
-    <td class="command" id="cmd:next">
-      next
+    <td id="mpd:living">
+      <img class="zone-name" id="mpd:living" src="/assets/icons/mpd/living-32.png">
     </td>
     <td id="output:living">
-      5.1
+      <span data-showif="output_living | equals 'on'">
+        <img class="output" id="output:living" src="/assets/icons/mpd/speakeron-32.png">
+      </span>
+      <span data-showif="output_living | equals 'off'">
+        <img class="output" id="output:living" src="/assets/icons/mpd/speakeroff-24.png">
+      </span>
     </td>
-  </tr>
-  <tr>
-    <td class="zone-name" id="mpd:headset">
-      headset
-    </td>
-    <td class="command" id="cmd_cust:repeat">
-      repeat <span data-bind="mpd_repeat | raw"></span>
-    </td>
-    <td>
-    </td>
-    <td class="command" id="cmd_cust:random">
-      random <span data-bind="mpd_random | raw"></span>
+    <td id="mpd:headset">
+      <img class="zone-name" id="mpd:headset" src="/assets/icons/mpd/headset-simple-32.png">
     </td>
     <td id="output:headset">
-      2.0
+      <span data-showif="output_headset | equals 'on'">
+        <img class="output" id="output:headset" src="/assets/icons/mpd/speakeron-32.png">
+      </span>
+      <span data-showif="output_headset | equals 'off'">
+        <img class="output" id="output:headset" src="/assets/icons/mpd/speakeroff-24.png">
+      </span>
+    </td>
+    <td>&nbsp;</td>
+    <td class="command" id="cmd_cust:toggle">
+      <span data-showif="mpd_playstate | equals 'playing'">
+        <img id="cmd_cust:toggle" src="/assets/icons/mpd/pause-32.png">
+      </span>
+      <span data-showif="mpd_playstate | equals 'paused'">
+        <img id="cmd_cust:toggle" src="/assets/icons/mpd/play-32.png">
+      </span>
+      <span data-showif="mpd_playstate | equals 'stopped'">
+        <img id="cmd_cust:toggle" src="/assets/icons/mpd/play-32.png">
+      </span>
+    </td>
+    <td class="command" id="cmd:previous">
+      <img id="cmd:previous" src="/assets/icons/mpd/previous-32.png">
+    </td>
+    <td class="command" id="cmd:next">
+      <img id="cmd:next" src="/assets/icons/mpd/next-32.png">
     </td>
   </tr>
   <tr>
-    <td class="zone-name" id="mpd:beci">
-      beci
+    <td id="mpd:dormitor">
+      <img class="zone-name" id="mpd:dormitor" src="/assets/icons/mpd/bed-32.png">
     </td>
+    <td id="output:dormitor">
+      <span data-showif="output_dormitor | equals 'on'">
+        <img class="output" id="output:dormitor" src="/assets/icons/mpd/speakeron-32.png">
+      </span>
+      <span data-showif="output_dormitor | equals 'off'">
+        <img class="output" id="output:dormitor" src="/assets/icons/mpd/speakeroff-24.png">
+      </span>
+    </td>
+    <td id="mpd:baie">
+      <img class="zone-name" id="mpd:baie" src="/assets/icons/mpd/bath-32.png">
+    </td>
+    <td id="output:baie">
+      <span data-showif="output_baie | equals 'on'">
+        <img class="output" id="output:baie" src="/assets/icons/mpd/speakeron-32.png">
+      </span>
+      <span data-showif="output_baie | equals 'off'">
+        <img class="output" id="output:baie" src="/assets/icons/mpd/speakeroff-24.png">
+      </span>
+    </td>
+    <td>&nbsp;</td>
     <td>
     </td>
-    <td>
-      Album Art
+    <td class="command" id="cmd_cust:repeat">
+      <span data-showif="mpd_repeat | equals 'on'">
+        <img class="inverted" id="cmd_cust:repeat" src="/assets/icons/mpd/repeat-32.png">
+      </span>
+      <span data-showif="mpd_repeat | equals 'off'">
+        <img id="cmd_cust:repeat" src="/assets/icons/mpd/repeat-32.png">
+      </span>
     </td>
-    <td>
+    <td class="command" id="cmd_cust:random">
+      <span data-showif="mpd_random | equals 'on'">
+        <img class="inverted" id="cmd_cust:random" src="/assets/icons/mpd/shuffle-32.png">
+      </span>
+      <span data-showif="mpd_random | equals 'off'">
+        <img id="cmd_cust:random" src="/assets/icons/mpd/shuffle-32.png">
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td id="mpd:beci">
+      <img class="zone-name" id="mpd:beci" src="/assets/icons/mpd/hammer-32.png">
     </td>
     <td id="output:beci">
-      2.0
+      <span data-showif="output_beci | equals 'on'">
+        <img class="output" id="output:beci" src="/assets/icons/mpd/speakeron-32.png">
+      </span>
+      <span data-showif="output_beci | equals 'off'">
+        <img class="output" id="output:beci" src="/assets/icons/mpd/speakeroff-24.png">
+      </span>
     </td>
-  </tr>
-  <tr>
-    <td class="zone-name" id="mpd:dormitor">
-      dormitor
+    <td id="mpd:pod">
+      <img class="zone-name" id="mpd:pod" src="/assets/icons/mpd/roof-32.png">
     </td>
-    <td>
-    </td>
-    <td>
-    </td>
-    <td>
-    </td>
-    <td>
-      5.0
-    </td>
-  </tr>
-  <tr>
-    <td class="zone-name" id="mpd:baie">
-      baie
+    <td id="output:pod">
+      <span data-showif="output_pod | equals 'on'">
+        <img class="output" id="output:pod" src="/assets/icons/mpd/speakeron-32.png">
+      </span>
+      <span data-showif="output_pod | equals 'off'">
+        <img class="output" id="output:pod" src="/assets/icons/mpd/speakeroff-24.png">
+      </span>
     </td>
     <td>
     </td>
     <td>
-    </td>
-    <td>
-    </td>
-    <td>
-      2.0
-    </td>
-  </tr>
-  <tr>
-    <td class="zone-name" id="mpd:pod">
-      pod
+      <progress class="volume" id="mpd:volume" value="" max="100">
+      </progress>&nbsp;<span class="value" data-bind="mpd_volume | raw"></span>%
     </td>
     <td class="command" id="cmd_cust:volume_down">
-      vol-
-    </td>
-    <td class="value" data-bind="mpd_volume | raw">
-      volume level
+      <img id="cmd_cust:volume_down" src="/assets/icons/mpd/volumedown-32.png">
     </td>
     <td class="command" id="cmd_cust:volume_up">
-      vol+
-    </td>
-    <td>
-      5.0
+      <img id="cmd_cust:volume_up" src="/assets/icons/mpd/volumeup-32.png">
     </td>
   </tr>
 </table>
 <table border=1>
   <tr>
-    <td class="value" data-bind="mpd_song | raw">
+    <td class="value, song" data-bind="mpd_song | raw">
       Song
     </td>
   </tr>
