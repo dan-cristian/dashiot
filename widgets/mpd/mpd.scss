@@ -33,7 +33,11 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
   }
 
   .output {
-    cursor: pointer
+    cursor: pointer;
+  }
+
+  .td-output {
+    min-width: 52px;
   }
 
   .artist, .name {
@@ -50,7 +54,9 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
   }
 
   .inverted {
-  filter: invert(100%);
+    /* filter: invert(100%);
+    */
+    background-color: orange;
   }
 
   .volume {
