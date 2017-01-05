@@ -29,6 +29,12 @@ require 'fileutils'
 @camera4URL = "/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=<user>&pwd=<password>"
 @newFile4 = "assets/images/cameras/snapshot4_new.jpeg"
 @oldFile4 = "assets/images/cameras/snapshot4_old.jpeg"
+
+@camera5Host = "192.168.0.9"
+@camera5Port = "10005"
+@camera5URL = "/"
+@newFile5 = "assets/images/cameras/snapshot5_new.jpeg"
+@oldFile5 = "assets/images/cameras/snapshot5_old.jpeg"
  
 def fetch_image(host, old_file, new_file, cam_port, cam_user, cam_pass, cam_url)
 	if File.exist?(old_file)
@@ -70,14 +76,16 @@ SCHEDULER.every @fetchNewImageEvery, first_in: 0 do
   campass3 = config['campass3']
   camuser4 = config['camuser4']
   campass4 = config['campass4']
-  
+  camuser5 = 'None'
+  campass5 = ''
   
 	new_file1 = fetch_image(@camera1Host,@oldFile1,@newFile1,@camera1Port,camuser1,campass1,@camera1URL)
 	new_file2 = fetch_image(@camera2Host,@oldFile2,@newFile2,@camera2Port,camuser2,campass2,@camera2URL)
 	new_file3 = fetch_image(@camera3Host,@oldFile3,@newFile3,@camera3Port,camuser3,campass3,@camera3URL)
 	new_file4 = fetch_image(@camera4Host,@oldFile4,@newFile4,@camera4Port,camuser4,campass4,@camera4URL)
+	#new_file5 = fetch_image(@camera5Host,@oldFile5,@newFile5,@camera5Port,camuser5,campass5,@camera5URL)
 
-	if not File.exists?(@newFile1 && @newFile2 && @newFile3 && @newFile4)
+	if not File.exists?(@newFile1 && @newFile2 && @newFile3 && @newFile4) #&& @newFile5)
 		warn "Failed to Get Camera Image"
 	end
  
@@ -85,11 +93,13 @@ SCHEDULER.every @fetchNewImageEvery, first_in: 0 do
 	send_event('camera2', image: make_web_friendly(@oldFile2))
 	send_event('camera3', image: make_web_friendly(@oldFile3))
 	send_event('camera4', image: make_web_friendly(@oldFile4))
+	#send_event('camera5', image: make_web_friendly(@oldFile5))
 	sleep(@cameraDelay)
 	send_event('camera1', image: make_web_friendly(new_file1))
 	send_event('camera2', image: make_web_friendly(new_file2))
 	send_event('camera3', image: make_web_friendly(new_file3))
 	send_event('camera4', image: make_web_friendly(new_file4))
+	#send_event('camera5', image: make_web_friendly(new_file5))
 	elapsed = (Time.now - run_start).to_i
 	puts "Camera duration=#{elapsed} seconds"
 end
