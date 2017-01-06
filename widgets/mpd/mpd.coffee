@@ -81,11 +81,12 @@ class Dashing.mpd extends Dashing.ClickableWidget
     if data.mpd_zone != null
       @select_mpd("mpd:" + data.mpd_zone, null, false)
     else
-      console.log('Error mpd zone is missing at onData')
+      console.log('Warning mpd zone is missing at onData')
     if data.outputs_enabled != null
       @refresh_output(data.outputs_enabled)
     else
-      console.log('Error, enabled outputs missing')
+      console.log('Warning enabled outputs missing')
     @update_current(data)
-    @update_zones_playing(data.mpd_zonesplaying)
+    if data.mpd_zonesplaying != null
+      @update_zones_playing(data.mpd_zonesplaying)
     

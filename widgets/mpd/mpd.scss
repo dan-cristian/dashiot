@@ -28,15 +28,20 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
     cursor: pointer;
   }
 
-  .zone-status { 
-    ;
+  .zone-status {
+    color: $title-color;
   }
 
   .zone-status-playing { 
+    /*
     width: 20px;
     height: 50px;
     background-image: url("/assets/icons/mpd/music-on.gif");
     background-size: cover;
+    */
+    border-right-width: 1px;
+    border-right-style: dashed;
+    border-right-color: red;
   }
 
   .command { 
@@ -48,14 +53,6 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
   }
 
   .td-output {
-    min-width: 52px;
-  }
-
-  .td-zone-playing {
-    width: 50px;
-    height: 50px;
-    background-image: url("/assets/icons/mpd/music-playing-small.gif");
-    background-repeat:no-repeat;background-size:50px 50px;
   }
 
   .artist, .name {
@@ -73,12 +70,16 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
 
   .inverted {
     /* filter: invert(100%);
-    */
+    
     background-color: orange;
+    */
+    border-width: 1px;
+    border-style: solid;
+    border-color: red;
+    border-radius: 10px;
   }
 
   .progress-bar {
-    ;
   }
 
   progress:not([value]) {
