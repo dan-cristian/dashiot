@@ -46,11 +46,22 @@ class Dashing.mpd extends Dashing.ClickableWidget
             @set 'output_'+zone, 'on'
     console.log('refresh_output completed')
 
-  update_volume: (volume) ->
-    elements = $(@node).find('.volume')
+  update_current: (data) ->
+    elements = $(@node).find('.progress-bar')
     for element in elements
       if element.id == 'mpd:volume'
-        element.value = volume
+        element.value = data.mpd_volume
+      if element.id == 'mpd:duration'
+        element.value = data.mpd_songposition
+        element.max = data.mpd_songduration
+
+  update_zones_playing: (zonesplaying) ->
+    cells = $(@node).find(".zone-status")
+    for cell in cells
+      cell.className = 'zone-status'
+      for zone in zonesplaying
+        if cell.id == 'status:' + zone
+          cell.className='zone-status zone-status-playing'
 
   onClick: (event) ->
     console.log("event: " + event.target.id)
@@ -75,5 +86,6 @@ class Dashing.mpd extends Dashing.ClickableWidget
       @refresh_output(data.outputs_enabled)
     else
       console.log('Error, enabled outputs missing')
-    @update_volume(data.mpd_volume)
+    @update_current(data)
+    @update_zones_playing(data.mpd_zonesplaying)
     

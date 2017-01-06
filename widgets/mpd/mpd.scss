@@ -28,6 +28,17 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
     cursor: pointer;
   }
 
+  .zone-status { 
+    ;
+  }
+
+  .zone-status-playing { 
+    width: 20px;
+    height: 50px;
+    background-image: url("/assets/icons/mpd/music-on.gif");
+    background-size: cover;
+  }
+
   .command { 
     cursor: pointer;
   }
@@ -38,6 +49,13 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
 
   .td-output {
     min-width: 52px;
+  }
+
+  .td-zone-playing {
+    width: 50px;
+    height: 50px;
+    background-image: url("/assets/icons/mpd/music-playing-small.gif");
+    background-repeat:no-repeat;background-size:50px 50px;
   }
 
   .artist, .name {
@@ -59,7 +77,7 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
     background-color: orange;
   }
 
-  .volume {
+  .progress-bar {
     ;
   }
 

@@ -119,7 +119,7 @@ def update_mpd()
   init() if $cmpd_list[0].mpd.nil?
   puts "Updating mpd #{$cmpd_list[$mpd_current_index].zone_name}"
   mpd = $cmpd_list[$mpd_current_index].mpd
-  #mpd.disconnect if mpd.connected? 
+  #mpd.disconnect if mpd.connected?
   mpd.connect unless mpd.connected?
   unless mpd.current_song.nil?
     song = mpd.current_song.artist + ' - ' + mpd.current_song.title
@@ -139,6 +139,14 @@ def update_mpd()
       mpd_zone = $cmpd_list[$mpd_current_index].zone_name
       mpd_random = mpd.random? ? 'on' : 'off'
       mpd_repeat = mpd.repeat? ? 'on' : 'off'
+      if mpd.status[:time].nil?
+        mpd_songposition = 0
+        mpd_songduration = 0
+      else
+        mpd_songposition = mpd.status[:time][0]
+        mpd_songduration = mpd.status[:time][1]
+      end
+
       outputs_enabled = []
       #outputs_disabled = []
 
@@ -150,15 +158,24 @@ def update_mpd()
         #  outputs_disabled << out[:outputname]
         end
       end
+      zones_playing = []
+      for i in 0..$cmpd_list.count - 1
+        tmpmpd = $cmpd_list[i].mpd
+        tmpmpd.connect unless tmpmpd.connected?
+        zones_playing << $cmpd_list[i].zone_name if tmpmpd.status[:state] == :play
+      end
       break
     rescue => e
       puts "!!!!!!!!!!!!!!!!!!! That crash again, err=#{e}"
+      mpd.disconnect if mpd.connected?
+      mpd.connect unless mpd.connected?
     end
   end
   #puts "Updating song=#{song} state=#{playstate} zone=#{mpd_zone}"
   send_event('mpd', mpd_song: song, mpd_volume: mpd.volume, mpd_playstate: playstate,
     mpd_zone: mpd_zone, mpd_random: mpd_random, mpd_repeat: mpd_repeat,
-    outputs_enabled: outputs_enabled)
+    outputs_enabled: outputs_enabled, mpd_songposition: mpd_songposition,
+    mpd_songduration: mpd_songduration, mpd_zonesplaying: zones_playing)
 end
 
 SCHEDULER.every '20s', :first_in => 0 do |job|

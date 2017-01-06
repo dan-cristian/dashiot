@@ -2,6 +2,8 @@
 <div>
 <table border=0>
   <tr>
+    <td class="zone-status" id="status:living">&nbsp;
+    </td>
     <td id="mpd:living">
       <img class="zone-name" id="mpd:living" src="/assets/icons/mpd/living-48.png">
     </td>
@@ -12,6 +14,8 @@
       <span data-showif="output_living | equals 'off'">
         <img class="output" id="output:living" src="/assets/icons/mpd/speakeroff-24.png">
       </span>
+    </td>
+    <td class="zone-status" id="status:headset">&nbsp;
     </td>
     <td id="mpd:headset" class="td-output">
       <img class="zone-name" id="mpd:headset" src="/assets/icons/mpd/headset-simple-48.png">
@@ -44,6 +48,8 @@
     </td>
   </tr>
   <tr>
+    <td class="zone-status" id="status:dormitor">&nbsp;
+    </td>
     <td id="mpd:dormitor">
       <img class="zone-name" id="mpd:dormitor" src="/assets/icons/mpd/bed-48.png">
     </td>
@@ -54,6 +60,8 @@
       <span data-showif="output_dormitor | equals 'off'">
         <img class="output" id="output:dormitor" src="/assets/icons/mpd/speakeroff-24.png">
       </span>
+    </td>
+    <td class="zone-status" id="status:baie">&nbsp;
     </td>
     <td id="mpd:baie">
       <img class="zone-name" id="mpd:baie" src="/assets/icons/mpd/bath-48.png">
@@ -68,6 +76,7 @@
     </td>
     <td>&nbsp;</td>
     <td>
+      <progress class="progress-bar" id="mpd:duration" value="" max="100">
     </td>
     <td class="command" id="cmd_cust:repeat">
       <span data-showif="mpd_repeat | equals 'on'">
@@ -87,6 +96,8 @@
     </td>
   </tr>
   <tr>
+    <td class="zone-status" id="status:beci">&nbsp;
+    </td>
     <td id="mpd:beci">
       <img class="zone-name" id="mpd:beci" src="/assets/icons/mpd/hammer-48.png">
     </td>
@@ -97,6 +108,8 @@
       <span data-showif="output_beci | equals 'off'">
         <img class="output" id="output:beci" src="/assets/icons/mpd/speakeroff-24.png">
       </span>
+    </td>
+    <td class="zone-status" id="status:pod">&nbsp;
     </td>
     <td id="mpd:pod">
       <img class="zone-name" id="mpd:pod" src="/assets/icons/mpd/roof-48.png">
@@ -112,7 +125,7 @@
     <td>
     </td>
     <td>
-      <progress class="volume" id="mpd:volume" value="" max="100">
+      <progress class="progress-bar" id="mpd:volume" value="" max="100">
       </progress>&nbsp;<span class="value" data-bind="mpd_volume | raw"></span>%
     </td>
     <td class="command" id="cmd_cust:volume_down">
