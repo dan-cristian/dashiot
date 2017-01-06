@@ -65,7 +65,7 @@ def make_web_friendly(file)
   "/" + File.basename(File.dirname(file)) + "/" + File.basename(file)
 end
  
-SCHEDULER.every @fetchNewImageEvery, first_in: 0 do
+SCHEDULER.every @fetchNewImageEvery, allow_overlapping: false, first_in: 0 do
   run_start = Time.now
   config = YAML.load_file('config.yaml')
   camuser1 = config['camuser1']

@@ -91,7 +91,7 @@ if ARGV.empty?
 end
 
 
-SCHEDULER.every '30s', :first_in => 0 do |job|
+SCHEDULER.every '30s', allow_overlapping: false, :first_in => 0 do |job|
   run_start = Time.now
   my_job
   elapsed = (Time.now - run_start).to_i

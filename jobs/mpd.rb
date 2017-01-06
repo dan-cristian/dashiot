@@ -178,7 +178,7 @@ def update_mpd()
     mpd_songduration: mpd_songduration, mpd_zonesplaying: zones_playing)
 end
 
-SCHEDULER.every '30s', :first_in => 0 do |job|
+SCHEDULER.every '30s', allow_overlapping: false, :first_in => 0 do |job|
   run_start = Time.now
   $mpd_mutex.synchronize do
     update_mpd()

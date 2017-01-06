@@ -95,7 +95,7 @@ def update_lastfm()
 	end
 end
 
-SCHEDULER.every '20s', :first_in => 0 do |job|
+SCHEDULER.every '20s', allow_overlapping: false, :first_in => 0 do |job|
 	run_start = Time.now
 	update_lastfm()
 	elapsed = (Time.now - run_start).to_i

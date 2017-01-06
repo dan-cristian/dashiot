@@ -70,20 +70,12 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
 
   .inverted {
     /* filter: invert(100%);
-    
     background-color: orange;
     */
     border-width: 1px;
     border-style: solid;
     border-color: red;
     border-radius: 10px;
-  }
-
-  .progress-bar {
-  }
-
-  progress:not([value]) {
-   /* Styling here */
   }
 
   progress {
