@@ -27,7 +27,11 @@ class Dashing.mpd extends Dashing.ClickableWidget
     $.post '/mpd/exec_cmd', cmd_name: cmd_name
 
   exec_cmd_cust: (cmd_name) ->
-    $.post '/mpd/exec_cmd_cust', cmd_name: cmd_name
+    switch cmd_name
+      when 'advanced-settings'
+        # todo
+      else
+        $.post '/mpd/exec_cmd_cust', cmd_name: cmd_name
 
   refresh_output: (enabled_list) ->
     console.log('refresh_output started')
@@ -63,6 +67,9 @@ class Dashing.mpd extends Dashing.ClickableWidget
         if cell.id == 'status:' + zone
           cell.className='zone-status zone-status-playing'
 
+  select_playlist: (name) ->
+    $.post '/mpd/select_playlist', playlist_name: name
+
   onClick: (event) ->
     console.log("event: " + event.target.id)
     command = event.target.id.split ":"
@@ -72,6 +79,7 @@ class Dashing.mpd extends Dashing.ClickableWidget
       when 'cmd' then @exec_cmd(command[1])
       when 'cmd_cust' then @exec_cmd_cust(command[1])
       when 'output' then @exec_cmd_cust(event.target.id)
+      when 'playlist' then @select_playlist(command[1])
     console.log('onclick completed')
 
   onData: (data) ->

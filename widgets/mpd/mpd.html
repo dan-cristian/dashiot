@@ -31,7 +31,8 @@
     <td>&nbsp;</td>
     <td class="command" id="cmd_cust:toggle">
       <span data-showif="mpd_playstate | equals 'playing'">
-        <img id="cmd_cust:toggle" src="/assets/icons/mpd/pause-48.png">
+        <img  src="/assets/icons/mpd/levels.gif" style="max-height: 48px; width: auto" class="under">
+        <img id="cmd_cust:toggle" src="/assets/icons/mpd/pause-48.png" class="over">
       </span>
       <span data-showif="mpd_playstate | equals 'paused'">
         <img id="cmd_cust:toggle" src="/assets/icons/mpd/play-48.png">
@@ -136,23 +137,56 @@
     </td>
   </tr>
 </table>
-<table border=1>
+<table border=0>
   <tr>
     <td class="value, song" data-bind="mpd_song | raw">
       Song
     </td>
+    
   </tr>
 </table>
-<table border=1>
+<table border=0>
   <tr>
     <td>
-      playlist 1
+      <table><tr>
+      <td>
+        <img class="command" id="cmd_cust:advanced-settings" src="/assets/icons/mpd/settings-32.png">
+      </td>
+      </tr></table>
     </td>
-    <td>
-      playlist 2
+    <td id="playlist">
+      <table><tr>
+      <td>
+        <span id="playlist:1" class="playlist"><img id="playlist:1" src="/assets/icons/mpd/playlist-random-32.png">1</span>
+      </td>
+      <td>
+        <span id="playlist:2" class="playlist">2</span>
+      </td>
+      <td>
+        <span id="playlist:3" class="playlist">3</span>
+      </td>
+      <td>
+        <span id="playlist:4" class="playlist">4</span>
+      </td>
+      <td>
+        <span id="playlist:5" class="playlist">5</span>
+      </td>
+      <td>
+        <span id="playlist:6" class="playlist"><img id="playlist:6" src="/assets/icons/mpd/playlist-kids-32.png">6</span>
+      </td>
+      <td>
+        <span id="playlist:7" class="playlist"><img id="playlist:7" src="/assets/icons/mpd/playlist-relax-32.png">7</span>
+      </td>
+      <td>
+        <span id="playlist:8" class="playlist"><img id="playlist:8" src="/assets/icons/mpd/playlist-dj-32.png">8</span>
+      </td>
+      <td>
+        <span id="playlist:9" class="playlist"><img id="playlist:9" src="/assets/icons/mpd/star-32.png">9</span>
+      </td>
+      </tr></table>
     </td>
-    <td>
-      playlist 3
+    <td id="advanced-settings" class="hidden">
+      Advanced settings
     </td>
   </tr>
 </table>

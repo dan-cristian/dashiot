@@ -1,7 +1,5 @@
 require 'ruby-mpd'
 
-$mpd_mutex = Mutex.new
-
 class Cmpd
   def initialize(zone_name, port, ip)
     @zone_name = zone_name
@@ -13,6 +11,8 @@ class Cmpd
   attr_writer :mpd
 end
 
+$mpd_mutex = Mutex.new
+$last_mpd_update = Time.now
 @IP='192.168.0.9'
 $cmpd_list = [Cmpd.new('living', 6600, @IP), Cmpd.new('headset', 6601, @IP), Cmpd.new('beci', 6602, @IP),
   Cmpd.new('dormitor', 6603, @IP), Cmpd.new('baie', 6604, @IP), Cmpd.new('pod', 6605, @IP)]
@@ -93,6 +93,37 @@ post '/mpd/exec_cmd' do
   end
 end
 
+post '/mpd/select_playlist' do
+  $mpd_mutex.synchronize do
+    playlist_name = params["playlist_name"]
+    puts "Selecting playlist #{[playlist_name]}"
+    mpd = $cmpd_list[$mpd_current_index].mpd
+    mpd.connect unless mpd.connected?
+    playlist = mpd.playlists.find {|p| p.name == playlist_name}
+    if !playlist.nil?
+      mpd.stop
+      mpd.clear
+      started = false
+      for song in playlist.songs
+        puts "Adding song #{song.title} - #{song.artist}"
+        begin
+          mpd.add(song)
+        rescue => e
+          puts "Warning, cannot add song #{song.file}, error #{e}"
+        end
+        if !started
+          mpd.play
+          started = true
+        end  
+      end
+    else
+      puts "Warning, no playlist found with name #{playlist_name}"
+    end
+    update_mpd()
+    return JSON.generate({"status" => "OK"})
+  end
+end
+
 def toggle_output(mpd, output_name)
   for i in 0..mpd.outputs.count - 1
     out = mpd.outputs[i]
@@ -111,8 +142,9 @@ def init()
     mpd.connect
     puts "Connected" if mpd.connected?
     $cmpd_list[i].mpd = mpd
+    $mpd_current_index = i if mpd.status[:state] == :play and $mpd_current_index.nil?
   end
-  $mpd_current_index = 0
+  $mpd_current_index = 0 if $mpd_current_index.nil?
 end
 
 def update_mpd()
@@ -121,7 +153,7 @@ def update_mpd()
   mpd = $cmpd_list[$mpd_current_index].mpd
   #mpd.disconnect if mpd.connected?
   mpd.connect unless mpd.connected?
-  unless mpd.current_song.nil?
+  unless mpd.current_song.nil? or mpd.current_song.artist.nil?
     song = mpd.current_song.artist + ' - ' + mpd.current_song.title
   else
     song = '(none)'
@@ -167,6 +199,7 @@ def update_mpd()
       break
     rescue => e
       puts "!!!!!!!!!!!!!!!!!!! That crash again, err=#{e}"
+      puts e.backtrace
       mpd.disconnect if mpd.connected?
       mpd.connect unless mpd.connected?
     end
@@ -176,12 +209,15 @@ def update_mpd()
     mpd_zone: mpd_zone, mpd_random: mpd_random, mpd_repeat: mpd_repeat,
     outputs_enabled: outputs_enabled, mpd_songposition: mpd_songposition,
     mpd_songduration: mpd_songduration, mpd_zonesplaying: zones_playing)
+  $last_mpd_update = Time.now
 end
 
 SCHEDULER.every '30s', allow_overlapping: false, :first_in => 0 do |job|
   run_start = Time.now
   $mpd_mutex.synchronize do
-    update_mpd()
+    elapsed = (Time.now - $last_mpd_update).to_i
+    #only update if no updates in the last 30 seconds
+    update_mpd() if elapsed >=30 or $mpd_current_index.nil?
   end
   elapsed = (Time.now - run_start).to_i
   puts "MPD duration=#{elapsed} seconds"

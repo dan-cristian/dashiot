@@ -4,8 +4,9 @@
 $background-color:  #9c4274;
 $value-color:       #fff;
 
-$title-color:       rgba(255, 255, 255, 0.7);;
-$moreinfo-color:    rgba(255, 255, 255, 0.7);;
+$title-color:       rgba(255, 255, 255, 0.7);
+$title-color-light:       rgba(255, 255, 255, 0.2);
+$moreinfo-color:    rgba(255, 255, 255, 0.7);
 
 // ----------------------------------------------------------------------------
 // Widget styles
@@ -46,9 +47,15 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
 
   .command { 
     cursor: pointer;
+    align-content: center;
   }
 
   .output {
+    cursor: pointer;
+  }
+
+  .playlist {
+    color: $title-color-light;
     cursor: pointer;
   }
 
@@ -77,6 +84,9 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
     border-color: red;
     border-radius: 10px;
   }
+  .hidden {
+    display: none;
+  }
 
   progress {
     background-color: darkgray;
@@ -90,6 +100,20 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);;
   progress::-webkit-progress-value {
     /* style rules */
     background-color: orange;
+  }
+
+  .under {
+    position:relative;
+    left:25px;
+    top:0px;
+    z-index:1;
+  }
+
+  .over {
+    position:relative;
+    left:-60px;
+    top:0px;
+    z-index:2;
   }
 
   .updated-at {
