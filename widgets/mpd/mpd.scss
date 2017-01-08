@@ -54,8 +54,13 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);
     cursor: pointer;
   }
 
-  .playlist {
+  .simple-settings {
     color: $title-color-light;
+    cursor: pointer;
+  }
+  
+  .advanced-settings {
+    color: $title-color;
     cursor: pointer;
   }
 

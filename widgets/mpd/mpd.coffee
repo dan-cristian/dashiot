@@ -26,10 +26,17 @@ class Dashing.mpd extends Dashing.ClickableWidget
   exec_cmd: (cmd_name) ->
     $.post '/mpd/exec_cmd', cmd_name: cmd_name
 
+  toggle_visibility: (element) ->
+    if element.offsetParent == null 
+      element.style.display = 'block'
+    else
+      element.style.display = 'none'
+
   exec_cmd_cust: (cmd_name) ->
     switch cmd_name
       when 'advanced-settings'
-        # todo
+        @toggle_visibility(this.parentView.node.getElementById('simple-settings'))
+        @toggle_visibility(this.parentView.node.getElementById('advanced-settings'))
       else
         $.post '/mpd/exec_cmd_cust', cmd_name: cmd_name
 
