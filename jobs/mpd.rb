@@ -1,4 +1,5 @@
 require 'ruby-mpd'
+require 'net/http'
 
 class Cmpd
   def initialize(zone_name, port, ip)
@@ -18,6 +19,68 @@ $cmpd_list = [Cmpd.new('living', 6600, @IP), Cmpd.new('headset', 6601, @IP), Cmp
   Cmpd.new('dormitor', 6603, @IP), Cmpd.new('baie', 6604, @IP), Cmpd.new('pod', 6605, @IP)]
 $mpd_current_index = nil
 $DELETE_MPD_COMMAND = "/home/scripts/audio/mpc-play.sh <mpd_zone_name> delete"
+
+$lastfm_api_key = nil
+
+######### LASTFM #################
+def init_lastfm_session()
+	$lastfm_api_sig = Digest::MD5.hexdigest("api_key#{$lastfm_api_key}methodauth.getSessiontoken#{$lastfm_api_token}#{$lastfm_api_secret}")
+	http = Net::HTTP.new('ws.audioscrobbler.com')
+	response = http.request(Net::HTTP::Get.new("/2.0/?method=auth.getSession&token=#{$lastfm_api_token}&api_key=#{$lastfm_api_key}&api_sig=#{$lastfm_api_sig}"))
+	xml_response=XmlSimple.xml_in(response.body, { 'ForceArray' => false })
+	if xml_response['status'] == 'ok'
+		$lastfm_session_key = xml_response['session']['key']
+    puts "New session key is #{$lastfm_session_key}, save it to config!"
+	else
+		puts 'Error, res=' + response.body
+	end
+end
+
+def get_lastfm_params()
+	config = YAML.load_file('config.yaml')
+	$lastfm_username = config['lastfm_user']
+	password = config['lastfm_pass']
+	$lastfm_api_key = config['lastfm_api']
+	$lastfm_api_secret = config['lastfm_secret']
+	puts "Get a new token with: http://www.last.fm/api/auth?api_key=#{$api_key}"
+	$lastfm_api_token = config['lastfm_token']
+	$lastfm_session_key = config['lastfm_session']
+	if $lastfm_session_key.nil?
+		init_lastfm_session()
+	end
+	#$lastfm_api_sig = Digest::MD5.hexdigest("api_key#{$lastfm_api_key}methodauth.getSessiontoken#{$lastfm_api_token}#{$lastfm_api_secret}")
+end
+
+def get_loved_tracks()
+  if $lastfm_api_key.nil?
+		get_lastfm_params()
+	end
+  http = Net::HTTP.new('ws.audioscrobbler.com')
+	response = http.request(Net::HTTP::Get.new("/2.0/?method=user.getlovedtracks&user=#{$lastfm_username}&api_key=#{$lastfm_api_key}"))
+	response_status = XmlSimple.xml_in(response.body, { 'ForceArray' => false })
+	if response_status['status'] == "failed"
+		failed = response_status['error']['content']
+		send_event('lastfm', { :status => failed })
+	else
+		tracks = XmlSimple.xml_in(response.body, { 'ForceArray' => false })['lovedtracks']['track']
+    # puts tracks
+    if tracks.count > 0
+      mpd = $cmpd_list[$mpd_current_index].mpd
+      mpd.connect unless mpd.connected?
+      mpd.clear 
+    end
+    for track in tracks
+      artist = track['artist']['name']
+      song = track['name']
+      image_url_small = track['image'][0]['content']
+      puts "#{artist} - #{song} #{image_url_small}"
+      #todo add song in mpd queue
+
+    end
+	end
+end
+
+######### MPD ####################
 
 def change_mpd(mpd_name)
   for i in 0..$cmpd_list.count - 1
@@ -80,6 +143,8 @@ def exec_cmd_cust(cmd_name)
     puts "Executing trash command #{sys_cmd}"
     res_cmd = `#{sys_cmd}`
     puts "Command result is #{res_cmd}"
+  when 'lastfm_loved'
+    get_loved_tracks()
   when /output:/
     out_zone = cmd_name.split(':')[1]
     toggle_output(mpd, out_zone)
@@ -233,6 +298,7 @@ def update_mpd()
 end
 
 SCHEDULER.every '30s', allow_overlapping: false, :first_in => 0 do |job|
+  get_loved_tracks()
   run_start = Time.now
   $mpd_mutex.synchronize do
     elapsed = (Time.now - $last_mpd_update).to_i
