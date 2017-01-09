@@ -13,13 +13,12 @@ class Cmpd
 end
 
 $mpd_mutex = Mutex.new
-$last_mpd_update = Time.now
+$last_mpd_update = Time.at(0)
 @IP='192.168.0.9'
 $cmpd_list = [Cmpd.new('living', 6600, @IP), Cmpd.new('headset', 6601, @IP), Cmpd.new('beci', 6602, @IP),
   Cmpd.new('dormitor', 6603, @IP), Cmpd.new('baie', 6604, @IP), Cmpd.new('pod', 6605, @IP)]
 $mpd_current_index = nil
 $DELETE_MPD_COMMAND = "/home/scripts/audio/mpc-play.sh <mpd_zone_name> delete"
-
 $lastfm_api_key = nil
 
 ######### LASTFM #################
@@ -48,38 +47,94 @@ def get_lastfm_params()
 	if $lastfm_session_key.nil?
 		init_lastfm_session()
 	end
-	#$lastfm_api_sig = Digest::MD5.hexdigest("api_key#{$lastfm_api_key}methodauth.getSessiontoken#{$lastfm_api_token}#{$lastfm_api_secret}")
 end
 
 def get_loved_tracks()
-  if $lastfm_api_key.nil?
-		get_lastfm_params()
-	end
   http = Net::HTTP.new('ws.audioscrobbler.com')
-	response = http.request(Net::HTTP::Get.new("/2.0/?method=user.getlovedtracks&user=#{$lastfm_username}&api_key=#{$lastfm_api_key}"))
-	response_status = XmlSimple.xml_in(response.body, { 'ForceArray' => false })
-	if response_status['status'] == "failed"
-		failed = response_status['error']['content']
-		send_event('lastfm', { :status => failed })
-	else
-		tracks = XmlSimple.xml_in(response.body, { 'ForceArray' => false })['lovedtracks']['track']
-    # puts tracks
-    if tracks.count > 0
-      mpd = $cmpd_list[$mpd_current_index].mpd
-      mpd.connect unless mpd.connected?
-      mpd.clear 
+  mpd = $cmpd_list[$mpd_current_index].mpd
+  mpd.connect unless mpd.connected?
+  restarted = false
+	page_count = 1
+  page = 1
+  loop do
+    puts "Getting all loved lastfm tracks for page #{page}"
+    response = http.request(Net::HTTP::Get.new("/2.0/?method=user.getlovedtracks&user=#{$lastfm_username}&api_key=#{$lastfm_api_key}&page=#{page}"))
+    response_body = XmlSimple.xml_in(response.body, { 'ForceArray' => false })
+    if response_body['status'] == "failed"
+      failed = response_body['error']['content']
+      send_event('mpd', { :lastfm_status => failed })
+      puts "Error, get all loved failed with #{failed}"
+      return
     end
+    page_count = response_body['lovedtracks']['totalPages'].to_i
+    tracks = response_body['lovedtracks']['track']
+    # puts tracks
+    mpd.clear if tracks.count > 0 && page == 1
     for track in tracks
       artist = track['artist']['name']
-      song = track['name']
+      title = track['name']
       image_url_small = track['image'][0]['content']
-      puts "#{artist} - #{song} #{image_url_small}"
+      # puts "#{artist} - #{title} #{image_url_small}"
       #todo add song in mpd queue
-
+      found = mpd.where({artist: artist, title: title}, {strict: true, add: true})
+      #puts "Added above song OK" if found
     end
+    if restarted == false
+        mpd.play
+        restarted = true if mpd.playing?
+      end
+    page = page + 1
+    break if page > page_count
 	end
+  puts "Added all loved lastfm tracks"
+  mpd.pause = false
+  update_mpd()
 end
 
+def get_lastfm_info(artist, track)
+  http = Net::HTTP.new('ws.audioscrobbler.com')
+  artist = CGI.escape(artist)
+	track = CGI.escape(track)
+  response = http.request(Net::HTTP::Get.new("/2.0/?method=track.getInfo&user=#{$lastfm_username}&api_key=#{$lastfm_api_key}&artist=#{artist}&track=#{track}"))
+  response_body = XmlSimple.xml_in(response.body, {'ForceArray' => false})
+  if response_body['status'] == "failed"
+    failed = response_body['error']['content']
+    send_event('mpd', { :lastfm_status => failed })
+    puts "Error, is loved failed with #{failed}"
+    return nil
+  end
+  #puts "lastfm info=#{response_body['track']}"
+  return response_body['track']
+end
+
+#loved = '1' or '0'
+def set_love(loved)
+  mpd = $cmpd_list[$mpd_current_index].mpd
+  mpd.connect unless mpd.connected?
+  unless mpd.current_song.nil? or mpd.current_song.artist.nil?
+    if loved == '1' 
+      method = 'track.love'
+    elsif loved == '0'
+      method = 'track.unlove'
+    else
+      puts "Warning unknown love value #{loved}, ignoring"
+      return
+    end
+    artist = mpd.current_song.artist
+    track = mpd.current_song.title
+    puts 'Love=#{loved} song ' + artist + ' - ' + track
+    artist = artist.encode('utf-8')
+    track = track.encode('utf-8')
+    uri = URI.parse('http://ws.audioscrobbler.com/2.0/')
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Post.new(uri.request_uri)
+    love_api_sig = Digest::MD5.hexdigest("api_key#{$lastfm_api_key}artist#{artist}method#{method}sk#{$lastfm_session_key}track#{track}#{$lastfm_api_secret}")
+    request.set_form_data({'method' => method, 'api_key' => $lastfm_api_key, 'track' => track, 'artist' => artist, 'api_sig' => love_api_sig, 'sk' => $lastfm_session_key})
+    response = http.request(request)
+    response_status = XmlSimple.xml_in(response.body, { 'ForceArray' => false })
+    puts 'Love status is ' + response_status['status'] + response.body
+  end
+end
 ######### MPD ####################
 
 def change_mpd(mpd_name)
@@ -131,9 +186,9 @@ def exec_cmd_cust(cmd_name)
       mpd.play
     end
   when 'volume_up'
-    mpd.volume = mpd.volume + 5
+    mpd.volume = [mpd.volume + 5, 100].max
   when 'volume_down'
-    mpd.volume = mpd.volume - 5
+    mpd.volume = [mpd.volume - 5, 0].min
   when 'repeat'
     mpd.repeat = !mpd.repeat?
   when 'random'
@@ -145,6 +200,13 @@ def exec_cmd_cust(cmd_name)
     puts "Command result is #{res_cmd}"
   when 'lastfm_loved'
     get_loved_tracks()
+  when 'love'
+    set_love('1')
+  when 'unlove'
+    set_love('0')
+  when 'play_all'
+    mpd.clear
+    mpd.where({title: ''}, {add: true})
   when /output:/
     out_zone = cmd_name.split(':')[1]
     toggle_output(mpd, out_zone)
@@ -229,17 +291,21 @@ def init()
   end
   $mpd_current_index = 0 if $mpd_current_index.nil?
   #debug
-  #exec_cmd_cust('trash')
+  #$mpd_current_index = 0
+  #exec_cmd_cust('play_all')
 end
 
+#todo: optimise by updating only changed parts 
 def update_mpd()
-  init() if $cmpd_list[0].mpd.nil?
   puts "Updating mpd #{$cmpd_list[$mpd_current_index].zone_name}"
   mpd = $cmpd_list[$mpd_current_index].mpd
-  #mpd.disconnect if mpd.connected?
   mpd.connect unless mpd.connected?
+  artist = ''
+  title = ''
   unless mpd.current_song.nil? or mpd.current_song.artist.nil?
-    song = mpd.current_song.artist + ' - ' + mpd.current_song.title
+    artist = mpd.current_song.artist
+    title = mpd.current_song.title
+    song = artist + ' - ' + title
   else
     song = '(none)'
   end
@@ -265,14 +331,10 @@ def update_mpd()
       end
 
       outputs_enabled = []
-      #outputs_disabled = []
-
       for i in 0..mpd.outputs.count - 1
         out = mpd.outputs[i]
         if out[:outputenabled]
           outputs_enabled << out[:outputname]
-        #else
-        #  outputs_disabled << out[:outputname]
         end
       end
       zones_playing = []
@@ -283,13 +345,24 @@ def update_mpd()
       end
       break
     rescue => e
-      puts "!!!!!!!!!!!!!!!!!!! That crash again, err=#{e}"
+      puts "!!!!!!!!!!!!!!!!!!! That crash again, err=#{e} index=#{$mpd_current_index}"
       puts e.backtrace
       mpd.disconnect if mpd.connected?
       mpd.connect unless mpd.connected?
     end
   end
+  lastfm_track_info = get_lastfm_info(artist, title)
   #puts "Updating song=#{song} state=#{playstate} zone=#{mpd_zone}"
+  if !lastfm_track_info.nil?
+    loved = lastfm_track_info['userloved']
+    playcount = lastfm_track_info['userplaycount']
+    #image = lastfm_track_info['image'][0]
+    puts "Track #{lastfm_track_info}"
+    send_event('mpd', lastfm_loved: loved, lastfm_playcount: playcount)
+    sleep 1 #seems to be needed otherwise above message is not sent
+  else
+    puts "Warning, no lastfm info! #{lastfm_track_info}"
+  end
   send_event('mpd', mpd_song: song, mpd_volume: mpd.volume, mpd_playstate: playstate,
     mpd_zone: mpd_zone, mpd_random: mpd_random, mpd_repeat: mpd_repeat,
     outputs_enabled: outputs_enabled, mpd_songposition: mpd_songposition,
@@ -297,13 +370,17 @@ def update_mpd()
   $last_mpd_update = Time.now
 end
 
+###########################
+
+get_lastfm_params()
+init()
+
 SCHEDULER.every '30s', allow_overlapping: false, :first_in => 0 do |job|
-  get_loved_tracks()
   run_start = Time.now
   $mpd_mutex.synchronize do
     elapsed = (Time.now - $last_mpd_update).to_i
-    #only update if no updates in the last 30 seconds
-    update_mpd() if elapsed >=30 or $mpd_current_index.nil?
+    #only update if no updates in the last x seconds
+    update_mpd() if elapsed >=10 or $mpd_current_index.nil?
   end
   elapsed = (Time.now - run_start).to_i
   puts "MPD duration=#{elapsed} seconds"

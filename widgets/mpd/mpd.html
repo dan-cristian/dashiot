@@ -148,43 +148,39 @@
 <table border=0>
   <tr>
     <td>
-      <table><tr>
-      <td style="text-align: left">
+      <table style="text-align: left"><tr>
+      <td >
         <img class="command" id="cmd_cust:advanced-settings" src="/assets/icons/mpd/settings-32.png">
+        <span data-showif="lastfm_loved | equals '1'">
+        <img class="command" id="cmd_cust:unlove" src="/assets/icons/mpd/unlove-32.png">
+        </span>
+        <span data-showif="lastfm_loved | equals '0'">
+          <img class="command" id="cmd_cust:love" src="/assets/icons/mpd/love-gray-32.png">
+        </span>
+      </td>
+      <td>
       </td>
       </tr></table>
     </td>
     <td id="simple-settings">
       <table><tr>
       <td>
-        <span id="cmd_cust:lastfm_loved" class="command"><img id="cmd_cust:lastfm_loved" src="/assets/icons/mpd/lastfm-32.png">1</span>
+        <span id="cmd_cust:lastfm_loved" class="command"><img id="cmd_cust:lastfm_loved" src="/assets/icons/mpd/lastfm-32.png"></span>
       </td>
       <td>
-        <span id="playlist:1" class="playlist"><img id="playlist:1" src="/assets/icons/mpd/playlist-random-32.png">1</span>
+        <span id="playlist:1" class="command"><img id="cmd_cust:play_all" src="/assets/icons/mpd/playlist-random-32.png"></span>
       </td>
       <td>
-        <span id="playlist:2" class="playlist">2</span>
+        <span id="playlist:2" class="command"><img id="playlist:2" src="/assets/icons/mpd/playlist-child-32.png"></span>
       </td>
       <td>
-        <span id="playlist:3" class="playlist">3</span>
+        <span id="playlist:7" class="command"><img id="playlist:3" src="/assets/icons/mpd/playlist-relax-32.png"></span>
       </td>
       <td>
-        <span id="playlist:4" class="playlist">4</span>
+        <span id="playlist:8" class="command"><img id="playlist:4" src="/assets/icons/mpd/playlist-dj-32.png"></span>
       </td>
       <td>
-        <span id="playlist:5" class="playlist">5</span>
-      </td>
-      <td>
-        <span id="playlist:6" class="playlist"><img id="playlist:6" src="/assets/icons/mpd/playlist-kids-32.png">6</span>
-      </td>
-      <td>
-        <span id="playlist:7" class="playlist"><img id="playlist:7" src="/assets/icons/mpd/playlist-relax-32.png">7</span>
-      </td>
-      <td>
-        <span id="playlist:8" class="playlist"><img id="playlist:8" src="/assets/icons/mpd/playlist-dj-32.png">8</span>
-      </td>
-      <td>
-        <span id="playlist:9" class="playlist"><img id="playlist:9" src="/assets/icons/mpd/star-32.png">9</span>
+        <span id="playlist:9" class="command"><img id="playlist:9" src="/assets/icons/mpd/star-32.png"></span>
       </td>
       </tr></table>
     </td>

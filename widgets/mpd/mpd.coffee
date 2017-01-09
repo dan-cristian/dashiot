@@ -90,18 +90,18 @@ class Dashing.mpd extends Dashing.ClickableWidget
     console.log('onclick completed')
 
   onData: (data) ->
-    @set 'mpd_playstate', data.mpd_playstate
-    @set 'mpd_random', data.mpd_random
-    @set 'mpd_repeat', data.mpd_repeat
-    if data.mpd_zone != null
+    if typeof(data.mpd_playstate) != 'undefined'
+      @set 'mpd_playstate', data.mpd_playstate
+    if typeof(data.mpd_random) != 'undefined'
+      @set 'mpd_random', data.mpd_random
+    if typeof(data.mpd_repeat) != 'undefined'
+      @set 'mpd_repeat', data.mpd_repeat
+    if typeof(data.mpd_zone) != 'undefined'
       @select_mpd("mpd:" + data.mpd_zone, null, false)
-    else
-      console.log('Warning mpd zone is missing at onData')
-    if data.outputs_enabled != null
+    if typeof(data.outputs_enabled) != 'undefined'
       @refresh_output(data.outputs_enabled)
-    else
-      console.log('Warning enabled outputs missing')
-    @update_current(data)
-    if data.mpd_zonesplaying != null
+    if typeof(data.mpd_volume) != 'undefined'
+      @update_current(data)
+    if typeof(data.mpd_zonesplaying) != 'undefined'
       @update_zones_playing(data.mpd_zonesplaying)
     
