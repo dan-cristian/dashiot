@@ -8,8 +8,10 @@ class Cmpd
     @ip = ip
     @mpd = nil
   end
-  attr_reader :zone_name, :port, :ip, :mpd
-  attr_writer :mpd
+  @lastfm_song = ''
+  @lastfm_loved = ''
+  attr_reader :zone_name, :port, :ip, :mpd, :lastfm_song, :lastfm_loved
+  attr_writer :mpd, :lastfm_song, :lastfm_loved
 end
 
 $mpd_mutex = Mutex.new
@@ -186,9 +188,13 @@ def exec_cmd_cust(cmd_name)
       mpd.play
     end
   when 'volume_up'
-    mpd.volume = [mpd.volume + 5, 100].max
+    puts "Volume is #{mpd.volume}"
+    mpd.volume = [mpd.volume + 5, 100].min
+    puts "Volume is #{mpd.volume}"
   when 'volume_down'
-    mpd.volume = [mpd.volume - 5, 0].min
+    puts "Volume is #{mpd.volume}"
+    mpd.volume = [mpd.volume - 5, 0].max
+    puts "Volume is #{mpd.volume}"
   when 'repeat'
     mpd.repeat = !mpd.repeat?
   when 'random'
@@ -299,6 +305,7 @@ end
 def update_mpd()
   puts "Updating mpd #{$cmpd_list[$mpd_current_index].zone_name}"
   mpd = $cmpd_list[$mpd_current_index].mpd
+  cmpd = $cmpd_list[$mpd_current_index]
   mpd.connect unless mpd.connected?
   artist = ''
   title = ''
@@ -331,7 +338,8 @@ def update_mpd()
       end
 
       outputs_enabled = []
-      for i in 0..mpd.outputs.count - 1
+      out_count = mpd.outputs.count
+      for i in 0..out_count - 1
         out = mpd.outputs[i]
         if out[:outputenabled]
           outputs_enabled << out[:outputname]
@@ -351,17 +359,26 @@ def update_mpd()
       mpd.connect unless mpd.connected?
     end
   end
-  lastfm_track_info = get_lastfm_info(artist, title)
-  #puts "Updating song=#{song} state=#{playstate} zone=#{mpd_zone}"
-  if !lastfm_track_info.nil?
-    loved = lastfm_track_info['userloved']
-    playcount = lastfm_track_info['userplaycount']
-    #image = lastfm_track_info['image'][0]
-    puts "Track #{lastfm_track_info}"
-    send_event('mpd', lastfm_loved: loved, lastfm_playcount: playcount)
-    sleep 1 #seems to be needed otherwise above message is not sent
+  if cmpd.lastfm_song != song
+    lastfm_track_info = get_lastfm_info(artist, title)
+    #puts "Updating song=#{song} state=#{playstate} zone=#{mpd_zone}"
+    if !lastfm_track_info.nil?
+      loved = lastfm_track_info['userloved']
+      playcount = lastfm_track_info['userplaycount']
+      if !lastfm_track_info['album'].nil? and !lastfm_track_info['album']['image'].nil? 
+        image = lastfm_track_info['album']['image'][0]['content']
+        puts "Track image is #{image}"
+      end
+      # puts "Track #{lastfm_track_info}"
+      send_event('mpd', lastfm_loved: loved, lastfm_playcount: playcount)
+      cmpd.lastfm_song = song
+      cmpd.lastfm_loved = loved
+      sleep 1 #seems to be needed otherwise above message is not sent
+    else
+      puts "Warning, no lastfm info! #{lastfm_track_info}"
+    end
   else
-    puts "Warning, no lastfm info! #{lastfm_track_info}"
+    puts "Skipping lastfm update, same song"
   end
   send_event('mpd', mpd_song: song, mpd_volume: mpd.volume, mpd_playstate: playstate,
     mpd_zone: mpd_zone, mpd_random: mpd_random, mpd_repeat: mpd_repeat,
