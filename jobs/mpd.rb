@@ -286,17 +286,22 @@ def save_songs_usb()
     mpd.connect unless mpd.connected?
     t = Time.now
     playlist = "#{$cmpd_list[$mpd_current_index].zone_name}_#{t.month}-#{t.day}"
+    count = mpd.queue.count
+    i = 1
     for song in mpd.queue
       source_file = "#{$mpd_database}/#{song.file}"
       dest_file = "#{target_root}/#{playlist}/#{song.file}"
       begin
         FileUtils.mkdir_p(File.dirname(dest_file))
+        puts "Copy #{i}/#{count} song #{song.file}"
         FileUtils.cp(source_file, dest_file)
       rescue => e
         puts "Cannot copy song to usb, e=#{e}"
       end
+      i = i + 1
     end
   end
+  puts "Save to usb completed"
 end
 
 def toggle_output(mpd, output_name)
