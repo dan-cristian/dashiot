@@ -22,6 +22,8 @@ $cmpd_list = [Cmpd.new('living', 6600, @IP), Cmpd.new('headset', 6601, @IP), Cmp
 $mpd_current_index = nil
 $DELETE_MPD_COMMAND = "/home/scripts/audio/mpc-play.sh <mpd_zone_name> delete"
 $lastfm_api_key = nil
+$mpd_database = nil
+$mpd_usbstick_model = nil
 
 ######### LASTFM #################
 def init_lastfm_session()
@@ -213,6 +215,8 @@ def exec_cmd_cust(cmd_name)
   when 'play_all'
     mpd.clear
     mpd.where({title: ''}, {add: true})
+  when 'save_to_usb'
+    save_songs_usb()
   when /output:/
     out_zone = cmd_name.split(':')[1]
     toggle_output(mpd, out_zone)
@@ -275,6 +279,26 @@ post '/mpd/select_playlist' do
   end
 end
 
+def save_songs_usb()
+  target_root = "/var/run/usbmount/#{$mpd_usbstick_model}"
+  if File.exists?(target_root)
+    mpd = $cmpd_list[$mpd_current_index].mpd
+    mpd.connect unless mpd.connected?
+    t = Time.now
+    playlist = "#{$cmpd_list[$mpd_current_index].zone_name}_#{t.month}-#{t.day}"
+    for song in mpd.queue
+      source_file = "#{$mpd_database}/#{song.file}"
+      dest_file = "#{target_root}/#{playlist}/#{song.file}"
+      begin
+        FileUtils.mkdir_p(File.dirname(dest_file))
+        FileUtils.cp(source_file, dest_file)
+      rescue => e
+        puts "Cannot copy song to usb, e=#{e}"
+      end
+    end
+  end
+end
+
 def toggle_output(mpd, output_name)
   for i in 0..mpd.outputs.count - 1
     out = mpd.outputs[i]
@@ -296,9 +320,13 @@ def init()
     $mpd_current_index = i if mpd.status[:state] == :play and $mpd_current_index.nil?
   end
   $mpd_current_index = 0 if $mpd_current_index.nil?
+  config = YAML.load_file('config.yaml')
+  $mpd_database = config['mpd_database']
+  $mpd_usbstick_model = config['mpd_usbstick_model']
   #debug
   #$mpd_current_index = 0
   #exec_cmd_cust('play_all')
+  #save_songs_usb()
 end
 
 #todo: optimise by updating only changed parts 
