@@ -291,12 +291,16 @@ def save_songs_usb()
     for song in mpd.queue
       source_file = "#{$mpd_database}/#{song.file}"
       dest_file = "#{target_root}/#{playlist}/#{song.file}"
-      begin
-        FileUtils.mkdir_p(File.dirname(dest_file))
-        puts "Copy #{i}/#{count} song #{song.file}"
-        FileUtils.cp(source_file, dest_file)
-      rescue => e
-        puts "Cannot copy song to usb, e=#{e}"
+      if File.exists?(dest_file) && File.size(dest_file) == File.size(source_file)
+        puts "Skip copy #{i}/#{count} as already exists, song #{song.file}"
+      else
+        begin
+          FileUtils.mkdir_p(File.dirname(dest_file))
+          puts "Copy #{i}/#{count} song #{song.file}"
+          FileUtils.cp(source_file, dest_file)
+        rescue => e
+          puts "Cannot copy song to usb, e=#{e}"
+        end
       end
       i = i + 1
     end
