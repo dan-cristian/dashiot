@@ -113,7 +113,8 @@ end
 
 #loved = '1' or '0'
 def set_love(loved)
-  mpd = $cmpd_list[$mpd_current_index].mpd
+  cmpd = $cmpd_list[$mpd_current_index]
+  mpd = cmpd.mpd
   mpd.connect unless mpd.connected?
   unless mpd.current_song.nil? or mpd.current_song.artist.nil?
     if loved == '1' 
@@ -137,6 +138,7 @@ def set_love(loved)
     response = http.request(request)
     response_status = XmlSimple.xml_in(response.body, { 'ForceArray' => false })
     puts 'Love status is ' + response_status['status'] + response.body
+    cmpd.lastfm_song = nil
   end
 end
 ######### MPD ####################
@@ -146,6 +148,7 @@ def change_mpd(mpd_name)
     if $cmpd_list[i].zone_name == mpd_name
       puts "Selected zone index #{i}"
       $mpd_current_index = i
+      $cmpd_list[i].lastfm_song = nil
       update_mpd()
       return
     end
