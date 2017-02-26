@@ -221,11 +221,11 @@ def exec_cmd_cust(cmd_name)
     mpd.where({title: ''}, {add: true})
   when 'save_to_usb'
     save_songs_usb()
-  when 'amp-bi-on'
+  when 'amp_bi_on'
     # replace later with a call to haiot
     # 0 for on, 1 for off!
     amp_bi_set(0)
-  when 'amp-bi-off'
+  when 'amp_bi_off'
     # replace later with a call to haiot
     # 0 for on, 1 for off!
     amp_bi_set(1)
