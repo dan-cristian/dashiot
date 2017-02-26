@@ -1,5 +1,6 @@
 require 'ruby-mpd'
 require 'net/http'
+require 'rubyserial'
 
 class Cmpd
   def initialize(zone_name, port, ip)
@@ -220,6 +221,14 @@ def exec_cmd_cust(cmd_name)
     mpd.where({title: ''}, {add: true})
   when 'save_to_usb'
     save_songs_usb()
+  when 'amp-bi-on'
+    # replace later with a call to haiot
+    # 0 for on, 1 for off!
+    amp_bi_set(0)
+  when 'amp-bi-off'
+    # replace later with a call to haiot
+    # 0 for on, 1 for off!
+    amp_bi_set(1)
   when /output:/
     out_zone = cmd_name.split(':')[1]
     toggle_output(mpd, out_zone)
@@ -280,6 +289,18 @@ post '/mpd/select_playlist' do
     update_mpd()
     return JSON.generate({"status" => "OK"})
   end
+end
+
+def amp_bi_set(state)
+  serialport = Serial.new '/dev/ttyS0', 9600, 8
+  # set amp state
+  serialport.write ["\x022BB0", state.to_s, "\x03"].to_s
+  sleep 0.2
+  # power off amp to enable bi-amp setting
+  serialport.write ["\x0207A1E\x03"].to_s
+  # power on amp
+  sleep 1
+  serialport.write ["\x0207A1D\x03"].to_s
 end
 
 def save_songs_usb()
