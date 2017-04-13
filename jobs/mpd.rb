@@ -307,7 +307,7 @@ end
 
 def save_playlist()
   puts "Executing script #{$save_playlist_script_dir}"
-  exec "#{$save_playlist_script_dir}"
+  system "#{$save_playlist_script_dir}"
 end
 
 def save_songs_usb()
