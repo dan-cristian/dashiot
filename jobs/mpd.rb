@@ -24,6 +24,7 @@ $DELETE_MPD_COMMAND = "/home/scripts/audio/mpc-play.sh <mpd_zone_name> delete"
 $lastfm_api_key = nil
 $mpd_database = nil
 $mpd_usbstick_model = nil
+$save_playlist_script_dir = nil
 
 ######### LASTFM #################
 def init_lastfm_session()
@@ -220,6 +221,8 @@ def exec_cmd_cust(cmd_name)
     mpd.where({title: ''}, {add: true})
   when 'save_to_usb'
     save_songs_usb()
+  when 'save_playlist'
+    save_playlist()
   when 'amp_bi_on'
     # replace later with a call to haiot
     amp_bi_set(true)
@@ -251,7 +254,7 @@ post '/mpd/exec_cmd' do
     mpd = $cmpd_list[$mpd_current_index].mpd
     mpd.connect unless mpd.connected?
     result = mpd.send(cmd_name)
-    puts"Exec result #{result}"
+    puts "Exec result #{result}"
     update_mpd()
     return JSON.generate({"status" => "OK"})
   end
@@ -300,6 +303,10 @@ def amp_bi_set(state)
   # power on amp
   sleep 2
   `echo -e "\x0207A1D\x03" > /dev/ttyS0`
+end
+
+def save_playlist()
+  exec "#{$save_playlist_script_dir}"
 end
 
 def save_songs_usb()
@@ -355,6 +362,7 @@ def init()
   config = YAML.load_file('config.yaml')
   $mpd_database = config['mpd_database']
   $mpd_usbstick_model = config['mpd_usbstick_model']
+  $save_playlist_script_dir = config['save-mpd-playlist.sh']
   #debug
   #$mpd_current_index = 0
   #exec_cmd_cust('play_all')
