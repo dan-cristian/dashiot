@@ -363,7 +363,7 @@ def init()
   config = YAML.load_file('config.yaml')
   $mpd_database = config['mpd_database']
   $mpd_usbstick_model = config['mpd_usbstick_model']
-  $save_playlist_script_dir = config['save-mpd-playlist']
+  $save_playlist_script_dir = config['save_playlist_script_dir']
   #debug
   #$mpd_current_index = 0
   #exec_cmd_cust('play_all')
