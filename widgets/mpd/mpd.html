@@ -15,6 +15,14 @@
         <img class="output" id="output:living" src="/assets/icons/mpd/speakeroff-32.png">
       </span>
     </td>
+    <td id="output:bucatarie" class="td-output">
+          <span data-showif="output_bucatarie | equals 'on'">
+            <img class="output" id="output:bucatarie" src="/assets/icons/mpd/speakeron-32.png">
+          </span>
+          <span data-showif="output_bucatarie | equals 'off'">
+            <img class="output" id="output:bucatarie" src="/assets/icons/mpd/speakeroff-32.png">
+          </span>
+        </td>
     <td class="zone-status" id="status:headset">
     </td>
     <td id="mpd:headset" class="td-output">
@@ -62,6 +70,7 @@
         <img class="output" id="output:dormitor" src="/assets/icons/mpd/speakeroff-32.png">
       </span>
     </td>
+    <td>&nbsp;</td>
     <td class="zone-status" id="status:baie">
     </td>
     <td id="mpd:baie">
@@ -110,6 +119,7 @@
         <img class="output" id="output:beci" src="/assets/icons/mpd/speakeroff-32.png">
       </span>
     </td>
+    <td>&nbsp;</td>
     <td class="zone-status" id="status:pod">
     </td>
     <td id="mpd:pod">
@@ -142,7 +152,6 @@
     <td class="value, song" data-bind="mpd_song | raw">
       Song
     </td>
-    
   </tr>
 </table>
 <table border=0>
@@ -191,14 +200,6 @@
         </td>
         <td>
           <span id="cmd_cust:amp_bi_off" class="command"><img id="cmd_cust:amp_bi_off" src="/assets/icons/mpd/kitchen-empty-32.png"></span>
-        </td>
-        <td id="output:bucatarie" class="td-output">
-          <span data-showif="output_bucatarie | equals 'on'">
-            <img class="output" id="output:bucatarie" src="/assets/icons/mpd/speakeron-32.png">
-          </span>
-          <span data-showif="output_bucatarie | equals 'off'">
-            <img class="output" id="output:bucatarie" src="/assets/icons/mpd/speakeroff-32.png">
-          </span>
         </td>
         <td>
           <span id="cmd_cust:trash" class="command"><img id="cmd_cust:trash" src="/assets/icons/mpd/trash-32.png"></span>
