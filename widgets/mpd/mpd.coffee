@@ -83,7 +83,7 @@ class Dashing.mpd extends Dashing.ClickableWidget
   onClick: (event) ->
     console.log("event: " + event.target.id)
     command = event.target.id.split ":"
-    param = event.target.id.substr(command.length + 1)
+    param = event.target.id.substr(command.length)
     #if /mpd:/.test(event.target.id)
     switch command[0]
       when 'mpd' then @select_mpd(command[1], event.target, true)
