@@ -77,6 +77,9 @@ class Dashing.mpd extends Dashing.ClickableWidget
   select_playlist: (name) ->
     $.post '/mpd/select_playlist', playlist_name: name
 
+  open_url: (url) ->
+    $.get url
+
   onClick: (event) ->
     console.log("event: " + event.target.id)
     command = event.target.id.split ":"
@@ -87,6 +90,7 @@ class Dashing.mpd extends Dashing.ClickableWidget
       when 'cmd_cust' then @exec_cmd_cust(command[1])
       when 'output' then @exec_cmd_cust(event.target.id)
       when 'playlist' then @select_playlist(command[1])
+      when 'url' then @open_url(command[1])
     console.log('onclick completed')
 
   onData: (data) ->
