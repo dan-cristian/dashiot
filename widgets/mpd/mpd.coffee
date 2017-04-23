@@ -83,6 +83,7 @@ class Dashing.mpd extends Dashing.ClickableWidget
   onClick: (event) ->
     console.log("event: " + event.target.id)
     command = event.target.id.split ":"
+    param = event.target.id.substr(command.length + 1)
     #if /mpd:/.test(event.target.id)
     switch command[0]
       when 'mpd' then @select_mpd(command[1], event.target, true)
@@ -90,7 +91,7 @@ class Dashing.mpd extends Dashing.ClickableWidget
       when 'cmd_cust' then @exec_cmd_cust(command[1])
       when 'output' then @exec_cmd_cust(event.target.id)
       when 'playlist' then @select_playlist(command[1])
-      when 'url' then @open_url(command[1])
+      when 'url' then @open_url(param)
     console.log('onclick completed')
 
   onData: (data) ->
