@@ -16,10 +16,11 @@ class Dashing.Graphtemp extends Dashing.Widget
       "#{minutes}:#{seconds}"
   
   @accessor 'humidity', ->
-    if @get('humidity')
-      return @get('humidity')
+    humidity = @get('humidity')
+    if humidity
+      return "#{humidity}%"
     else
-      return "-"
+      return ""
   
   @accessor 'extra', ->
     extra = @get('tag')
