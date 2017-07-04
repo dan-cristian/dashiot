@@ -32,12 +32,14 @@ SCHEDULER.every '3m', allow_overlapping: false, :first_in => 0 do |job|
     temp_rows = db.query(sql)
     #temp_list = []
     points = []
-    humid = 0
+    humid = -1
     # Sending to List widget, so map to :label and :value
     temp_items = temp_rows.map do |row2|
       temp = row2['temperature']
       date = row2['updated_on']
-      humid = row2['humidity']
+      if humid == -1
+        humid = row2['humidity']
+      end
       #id = row2['id']
       #dt = DateTime.parse(date) 
       xval = date.to_i      
