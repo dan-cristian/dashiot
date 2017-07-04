@@ -37,28 +37,33 @@ require 'fileutils'
 @oldFile5 = "assets/images/cameras/snapshot5_old.jpeg"
  
 def fetch_image(host, old_file, new_file, cam_port, cam_user, cam_pass, cam_url)
-	if File.exist?(old_file)
-		FileUtils.rm(old_file)
-		#`rm #{old_file}`
-	end
-	if File.exist?(new_file)
-		# puts "Moving  #{new_file} to #{old_file}"
-		FileUtils.mv(new_file, old_file)
-		#`mv #{new_file} #{old_file}`
-	end
-	Net::HTTP.start(host, cam_port) do |http|
-		cam_url = cam_url.sub '<user>', cam_user
-		cam_url = cam_url.sub '<password>', cam_pass
-		req = Net::HTTP::Get.new(cam_url)
-		if cam_user != "None" ## if username for any particular camera is set to 'None' then assume auth not required.
-			req.basic_auth cam_user, cam_pass
+	begin
+		if File.exist?(old_file)
+			FileUtils.rm(old_file)
+			#`rm #{old_file}`
 		end
-		response = http.request(req)
-		open(new_file, "wb") do |file|
-			file.write(response.body)
+		if File.exist?(new_file)
+			# puts "Moving  #{new_file} to #{old_file}"
+			FileUtils.mv(new_file, old_file)
+			#`mv #{new_file} #{old_file}`
 		end
+		Net::HTTP.start(host, cam_port) do |http|
+			cam_url = cam_url.sub '<user>', cam_user
+			cam_url = cam_url.sub '<password>', cam_pass
+			req = Net::HTTP::Get.new(cam_url)
+			if cam_user != "None" ## if username for any particular camera is set to 'None' then assume auth not required.
+				req.basic_auth cam_user, cam_pass
+			end
+			response = http.request(req)
+			open(new_file, "wb") do |file|
+				file.write(response.body)
+			end
+		end
+		new_file
+	rescue
+		puts "Exception for #{host} #{cam_url}"
+		""
 	end
-	new_file
 end
  
 def make_web_friendly(file)

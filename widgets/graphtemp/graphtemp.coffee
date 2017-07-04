@@ -2,12 +2,12 @@ class Dashing.Graphtemp extends Dashing.Widget
 
   @accessor 'current', ->
     return @get('displayedValue') if @get('displayedValue')
-    points = @get('points')
+    points = @get('points_temp')
     if points
       points[points.length - 1].y
 
   @accessor 'updateon', ->
-    points = @get('points')
+    points = @get('points_temp')
     if points
       today = Math.round(new Date().getTime() / 1000)
       delta = today - points[points.length - 1].x
@@ -16,11 +16,17 @@ class Dashing.Graphtemp extends Dashing.Widget
       "#{minutes}:#{seconds}"
   
   @accessor 'humidity_value', ->
-    humidity = @get('humidity')
-    if humidity
-      return "#{humidity}%"
-    else
-      return ""
+    #humidity = @get('humidity')
+    #if humidity
+    #  return "#{humidity}%"
+    #else
+    #  return ""
+    points = @get('points_humid')
+    if points
+      humidity = points[points.length - 1].y
+      if humidity != null
+        return "#{humidity}%"
+    return ""
   
   @accessor 'extra', ->
     extra = @get('tag')
@@ -33,7 +39,7 @@ class Dashing.Graphtemp extends Dashing.Widget
         extra
 
   @accessor 'arrow', ->
-    points = @get('points')
+    points = @get('points_temp')
     if points && points.length >= 3 
       last = points[points.length - 1].y
       prev1 = points[points.length - 2].y
@@ -55,12 +61,17 @@ class Dashing.Graphtemp extends Dashing.Widget
         {
         color: "#fff",
         data: [{x:0, y:0}]
+        },
+        {
+        color: "steelblue",
+        data: [{x:0, y:0}]
         }
       ]
-      padding: {top: 0.02, left: 0.02, right: 0.02, bottom: 0.02}
+      padding: {top: 0.02, left: 0, right: 0, bottom: 0.02}
     )
 
-    @graph.series[0].data = @get('points') if @get('points')
+    @graph.series[0].data = @get('points_temp') if @get('points_temp')
+    @graph.series[1].data = @get('points_humid') if @get('points_humid')
 
     x_axis = new Rickshaw.Graph.Axis.Time(graph: @graph)
     y_axis = new Rickshaw.Graph.Axis.Y(graph: @graph, tickFormat: Rickshaw.Fixtures.Number.formatKMBT)
@@ -68,7 +79,8 @@ class Dashing.Graphtemp extends Dashing.Widget
 
   onData: (data) ->
     if @graph
-      @graph.series[0].data = data.points
+      @graph.series[0].data = data.points_temp
+      @graph.series[1].data = data.points_humid
       @graph.render()
     extra = @get('tag')
     if extra == 1
