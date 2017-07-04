@@ -23,7 +23,7 @@ SCHEDULER.every '3m', allow_overlapping: false, :first_in => 0 do |job|
     sensor_name = row['sensor_name']
     #puts "Sensor=" + sensor_name
     sql = "
-    SELECT id, temperature, updated_on FROM sensor_history 
+    SELECT id, temperature, humidity, updated_on FROM sensor_history 
     WHERE sensor_name='" + sensor_name + "' AND temperature is not NULL  
     ORDER BY id DESC LIMIT 50
     "
@@ -32,10 +32,12 @@ SCHEDULER.every '3m', allow_overlapping: false, :first_in => 0 do |job|
     temp_rows = db.query(sql)
     #temp_list = []
     points = []
+    humid = 0
     # Sending to List widget, so map to :label and :value
     temp_items = temp_rows.map do |row2|
       temp = row2['temperature']
       date = row2['updated_on']
+      humid = row2['humidity']
       #id = row2['id']
       #dt = DateTime.parse(date) 
       xval = date.to_i      
@@ -56,7 +58,7 @@ SCHEDULER.every '3m', allow_overlapping: false, :first_in => 0 do |job|
     # Update the List widget
     if temp_items.count > 0
       #send_event('temperature-' + sensor_name, { current: temp_list[0], last: temp_list[1] })
-      send_event('graphtemp-'+ sensor_name, points: points, tag: heatison)
+      send_event('graphtemp-'+ sensor_name, points: points, tag: heatison, humidity: humid)
     end
   end
   elapsed = (Time.now - run_start).to_i
