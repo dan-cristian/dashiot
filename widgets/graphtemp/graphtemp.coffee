@@ -20,7 +20,7 @@ class Dashing.Graphtemp extends Dashing.Widget
     if humidity
       return "#{humidity}%"
     else
-      return ""
+      return "-"
   
   @accessor 'extra', ->
     extra = @get('tag')

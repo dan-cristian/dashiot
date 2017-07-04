@@ -18,8 +18,7 @@ SCHEDULER.every '3m', allow_overlapping: false, :first_in => 0 do |job|
   WHERE updated_on >= CURDATE()
   '
   sensor_rows = db.query(sql)
-  humid = -1
-  
+
   sensor_items = sensor_rows.map do |row|
     sensor_name = row['sensor_name']
     #puts "Sensor=" + sensor_name
@@ -33,12 +32,14 @@ SCHEDULER.every '3m', allow_overlapping: false, :first_in => 0 do |job|
     temp_rows = db.query(sql)
     #temp_list = []
     points = []
+    humid = -1
     # Sending to List widget, so map to :label and :value
     temp_items = temp_rows.map do |row2|
       temp = row2['temperature']
       date = row2['updated_on']
       if humid == -1
         humid = row2['humidity']
+        puts "humid=#{humid}"
       end
       #id = row2['id']
       #dt = DateTime.parse(date) 
@@ -64,5 +65,5 @@ SCHEDULER.every '3m', allow_overlapping: false, :first_in => 0 do |job|
     end
   end
   elapsed = (Time.now - run_start).to_i
-  puts "Temperature duration=#{elapsed} seconds humid=#{humid}"
+  puts "Temperature duration=#{elapsed} seconds"
 end
