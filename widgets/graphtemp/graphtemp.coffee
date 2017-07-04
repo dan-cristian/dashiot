@@ -18,7 +18,7 @@ class Dashing.Graphtemp extends Dashing.Widget
   @accessor 'humidity', ->
     humidity = @get('humidity')
     if humidity
-      return "#{humidity}" + " %"
+      return "#{humidity}" + " rh"
     else
       return "-"
   
