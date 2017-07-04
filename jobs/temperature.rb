@@ -64,5 +64,5 @@ SCHEDULER.every '3m', allow_overlapping: false, :first_in => 0 do |job|
     end
   end
   elapsed = (Time.now - run_start).to_i
-  puts "Temperature duration=#{elapsed} seconds"
+  puts "Temperature duration=#{elapsed} seconds humid=#{humid}"
 end
