@@ -59,23 +59,34 @@ class Dashing.Graphtemp extends Dashing.Widget
       #renderer: @get("graphtype")
       series: [
         {
-        color: "#fff",
-        data: [{x:0, y:0}]
+        color: "red",
+        data: [{x:0, y:0}],
+        name: 'temp'
         },
         {
         color: "steelblue",
-        data: [{x:0, y:0}]
+        data: [{x:0, y:0}],
+        name: 'humid'
         }
       ]
-      padding: {top: 0.02, left: 0, right: 0, bottom: 0.02}
+      padding: {top: 0.02, left: 0.1, right: 0.1, bottom: 0.02}
     )
 
     @graph.series[0].data = @get('points_temp') if @get('points_temp')
     @graph.series[1].data = @get('points_humid') if @get('points_humid')
 
-    x_axis = new Rickshaw.Graph.Axis.Time(graph: @graph)
-    y_axis = new Rickshaw.Graph.Axis.Y(graph: @graph, tickFormat: Rickshaw.Fixtures.Number.formatKMBT)
+    x_axis = new Rickshaw.Graph.Axis.Time(graph: @graph,
+      tickTransform: (svg) ->
+        svg.call(xAxis).selectAll("text").style("text-anchor", "start").attr("transform", "rotate(-45)")
+    )
+    y_axis = new Rickshaw.Graph.Axis.Y(graph: @graph, 
+      tickFormat: Rickshaw.Fixtures.Number.formatKMBT
+      )
     @graph.render()
+    
+    #hoverDetail = new Rickshaw.Graph.HoverDetail( {
+	  #  graph: @graph,
+    #} );
 
   onData: (data) ->
     if @graph

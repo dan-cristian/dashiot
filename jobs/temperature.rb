@@ -22,11 +22,11 @@ SCHEDULER.every '3m', allow_overlapping: false, :first_in => 0 do |job|
   sensor_items = sensor_rows.map do |row|
     sensor_name = row['sensor_name']
     #puts "Sensor=" + sensor_name
-    sql = "
-    SELECT id, temperature, humidity, updated_on FROM sensor_history 
-    WHERE sensor_name='" + sensor_name + "' AND temperature is not NULL  
-    ORDER BY id DESC LIMIT 50
-    "
+    #sql = "
+    #SELECT id, temperature, humidity, updated_on FROM sensor_history 
+    #WHERE sensor_name='" + sensor_name + "' AND temperature is not NULL  
+    #ORDER BY id DESC LIMIT 50
+    #"
   
     sql = "
     SELECT max(temperature) as temperature, max(humidity) as humidity, max(updated_on) as updated_on
