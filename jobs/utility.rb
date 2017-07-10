@@ -1,7 +1,7 @@
 require 'mysql2'
 require 'date'
 
-SCHEDULER.every '5m', :first_in => 0 do |job|
+SCHEDULER.every '2m', :first_in => 0 do |job|
   run_start = Time.now
   config = YAML.load_file('config.yaml')
   mysql_host = config['mysql_host']
