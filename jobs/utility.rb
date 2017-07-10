@@ -15,7 +15,7 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
   SELECT DISTINCT(utility_name), unit_name, sum(units_delta) as day_total_units
   FROM utility_history 
   WHERE unit_name IS NOT null AND updated_on >= CURDATE()
-  GROUP BY sensor_name, unit_name
+  GROUP BY utility_name, unit_name
   "
   
   utility_rows = db.query(sql)
