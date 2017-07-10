@@ -12,7 +12,7 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
   db = Mysql2::Client.new(:host => mysql_host, :username => mysql_user, :password => mysql_pass, :port => 3306, :database => "haiot-reporting" )
 
   sql = "
-  SELECT DISTINCT(sensor_name), unit_name, sum(units_delta) as day_total_units
+  SELECT DISTINCT(utility_name), unit_name, sum(units_delta) as day_total_units
   FROM utility_history 
   WHERE unit_name IS NOT null AND updated_on >= CURDATE()
   GROUP BY sensor_name, unit_name
@@ -21,7 +21,8 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
   utility_rows = db.query(sql)
   
   utility_items = utility_rows.map do |row|
-    sensor_name = row['sensor_name']
+    #sensor_name = row['sensor_name']
+    utility_name = row['utility_name']
     unit_name = row['unit_name']
     day_total_units = row['day_total_units'].round(1)
     
@@ -29,7 +30,7 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
     sql = "
     SELECT HOUR(updated_on) as hour, SUM(units_delta) as units, MAX(updated_on) as updated_on 
     FROM utility_history
-    WHERE sensor_name='" + sensor_name + "' AND updated_on >= CURDATE()
+    WHERE utility_name='" + utility_name + "' AND updated_on >= CURDATE()
     GROUP BY hour(updated_on)
     ORDER BY hour(updated_on)
     "
@@ -46,7 +47,7 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
     # Update the List widget
     if day_rows.count > 0
       #send_event('temperature-' + sensor_name, { current: temp_list[0], last: temp_list[1] })
-      send_event('graphutility-'+ sensor_name, points: points, day_total_units: day_total_units, unit_name: unit_name)
+      send_event('graphutility-'+ utility_name, points: points, day_total_units: day_total_units, unit_name: unit_name)
     end
   end
   elapsed = (Time.now - run_start).to_i
