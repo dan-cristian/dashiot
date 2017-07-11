@@ -64,7 +64,7 @@ class Dashing.Graphtemp extends Dashing.Widget
         name: 'temp'
         },
         {
-        color: "steelblue",
+        color: "blue",
         data: [{x:0, y:0}],
         name: 'humid'
         }
