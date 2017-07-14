@@ -59,12 +59,12 @@ class Dashing.Graphtemp extends Dashing.Widget
       #renderer: @get("graphtype")
       series: [
         {
-        color: "red",
+        color: "#fff",
         data: [{x:0, y:0}],
         name: 'temp'
         },
         {
-        color: "blue",
+        color: "#ffe",
         data: [{x:0, y:0}],
         name: 'humid'
         }
