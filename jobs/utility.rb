@@ -26,6 +26,7 @@ SCHEDULER.every '2m', :first_in => 0 do |job|
     unit_name = row['unit_name']
     unless row['day_total_units'].nil
       day_total_units = row['day_total_units'].round(1)
+    end
     
     #puts "Sensor=#{sensor_name} #{unit_name} #{day_total_units}"
     sql = "
