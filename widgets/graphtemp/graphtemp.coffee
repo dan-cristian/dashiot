@@ -2,9 +2,11 @@ class Dashing.Graphtemp extends Dashing.Widget
 
   @accessor 'current', ->
     return @get('displayedValue') if @get('displayedValue')
-    points = @get('points_temp')
-    if points
-      points[points.length - 1].y
+    val = @get('current_temp')
+    if val
+      return val
+    else
+      return "-"
 
   @accessor 'updateon', ->
     points = @get('points_temp')
@@ -16,16 +18,9 @@ class Dashing.Graphtemp extends Dashing.Widget
       "#{minutes}:#{seconds}"
   
   @accessor 'humidity_value', ->
-    #humidity = @get('humidity')
-    #if humidity
-    #  return "#{humidity}%"
-    #else
-    #  return ""
-    points = @get('points_humid')
-    if points
-      humidity = points[points.length - 1].y
-      if humidity != null
-        return "#{humidity}%"
+    val = @get('current_humid')
+    if val
+        return "#{val}%"
     return ""
   
   @accessor 'extra', ->

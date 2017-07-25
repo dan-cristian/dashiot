@@ -69,10 +69,20 @@ SCHEDULER.every '2m', allow_overlapping: false, :first_in => 0 do |job|
       # puts "heat is on = #{heatison}"
     end
     
+    sql = "
+    SELECT temperature, humidity FROM sensor_history
+     WHERE sensor_name='" + sensor_name + "' order by id desc LIMIT 1
+    "
+    current_rows = db.query(sql)
+    if current_rows.count > 0
+      current_temp = current_rows.first['temperature']
+      current_humid = current_rows.first['humidity']
+    end
     # Update the List widget
     if temp_items.count > 0
       #send_event('temperature-' + sensor_name, { current: temp_list[0], last: temp_list[1] })
-      send_event('graphtemp-' + sensor_name, points_temp: points_temp, points_humid: points_humid, tag: heatison)
+      send_event('graphtemp-' + sensor_name, points_temp: points_temp, points_humid: points_humid, tag: heatison, 
+        current_temp: current_temp, current_humid: current_humid)
     end
   end
   elapsed = (Time.now - run_start).to_i
