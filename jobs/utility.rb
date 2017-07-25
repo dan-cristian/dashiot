@@ -24,7 +24,7 @@ SCHEDULER.every '2m', :first_in => 0 do |job|
     #sensor_name = row['sensor_name']
     utility_name = row['utility_name']
     unit_name = row['unit_name']
-    unless row['day_total_units'].nil
+    unless row['day_total_units'].nil?
       day_total_units = row['day_total_units'].round(1)
     end
     
