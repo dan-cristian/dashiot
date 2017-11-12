@@ -1,7 +1,7 @@
 require 'mysql2'
 require 'date'
 
-SCHEDULER.every '2m', :first_in => 0 do |job|
+SCHEDULER.every '1m', :first_in => 0 do |job|
   run_start = Time.now
   config = YAML.load_file('config.yaml')
   mysql_host = config['mysql_host']
@@ -54,9 +54,11 @@ SCHEDULER.every '2m', :first_in => 0 do |job|
     if current_rows.count > 0
       units_2_delta = current_rows.first['units_2_delta']
       unit_2_name = current_rows.first['unit_2_name']
-    else
+    end
+
+    if (!defined?(unit_2_name) or unit_2_name.nil?) and units_2_delta == 0
+      unit_2_name = ''
       units_2_delta = ''
-      unit_2_name = 'n/a!'
     end
 
     # Update the List widget

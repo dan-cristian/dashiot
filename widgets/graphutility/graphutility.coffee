@@ -5,7 +5,10 @@ class Dashing.Graphutility extends Dashing.Widget
 
   @accessor 'current2', ->
     tmp=@get('units_2_delta') 
-    Math.round(tmp, 0)
+    if tmp != ''
+      Math.round(tmp, 0)
+    else
+      ''
 
   @accessor 'updateon', ->
     points = @get('points')
