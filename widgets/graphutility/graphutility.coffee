@@ -3,6 +3,10 @@ class Dashing.Graphutility extends Dashing.Widget
   @accessor 'current', ->
     @get('day_total_units')
 
+  @accessor 'current2', ->
+    tmp=@get('units_2_delta') 
+    Math.round(tmp, 0)
+
   @accessor 'updateon', ->
     points = @get('points')
     if points
@@ -15,6 +19,9 @@ class Dashing.Graphutility extends Dashing.Widget
   @accessor 'unit_name_label', ->
     @get('unit_name')
     
+  @accessor 'unit_2_name_label', ->
+    @get('unit_2_name')
+
   ready: ->
     container = $(@node).parent()
     # Gross hacks. Let's fix this.
