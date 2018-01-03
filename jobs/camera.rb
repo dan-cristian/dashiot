@@ -24,7 +24,7 @@ require 'fileutils'
 @oldFile3 = "assets/images/cameras/snapshot3_old.jpeg"
 
 
-@camera4Host = "192.168.0.26"
+@camera4Host = "192.168.0.21"
 @camera4Port = "80"
 @camera4URL = "/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=<user>&pwd=<password>"
 @newFile4 = "assets/images/cameras/snapshot4_new.jpeg"
