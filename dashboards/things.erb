@@ -1,0 +1,32 @@
+<script type='text/javascript'>
+$(function() {
+  // These settings override the defaults set in application.coffee. You can do this on a per dashboard basis.
+  // Dashing.gridsterLayout('[{"col":2,"row":1},{"col":1,"row":1},{"col":3,"row":1},{"col":2,"row":2},{"col":3,"row":2},{"col":1,"row":2},{"col":5,"row":1},{"col":4,"row":2},{"col":2,"row":3}]')
+  Dashing.widget_base_dimensions = [255, 236]
+  Dashing.numColumns = 7
+});
+</script>
+<% content_for :title do %>Haiot<% end %>
+<div class="gridster">
+  <ul>
+    <li data-row="1" data-col="1" data-sizex="2" data-sizey="1">
+      <iframe width="510" height="236" scrolling="no" src="https://thingspeak.com/channels/396174/charts/1?bgcolor=444&dynamic=true&results=200&sum=60&title=kwh&type=column&api_key=TJRH3D4IV84MW7YO"></iframe>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="2" data-sizey="1">
+      <iframe width="510" height="236" scrolling="no" src="https://thingspeak.com/channels/396174/charts/2?bgcolor=444&dynamic=true&results=30&round=0&title=main%20watt&type=spline&update=15&api_key=TJRH3D4IV84MW7YO"></iframe>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="2" data-sizey="1">
+      <iframe width="510" height="236" scrolling="no" src="https://thingspeak.com/channels/396140/charts/1?bgcolor=444&dynamic=true&results=60&type=spline&api_key=BFIJ0F04WBQ4ZPN2"></iframe>
+    </li>
+    <li data-row="1" data-col="1" data-sizex="2" data-sizey="1">
+      <iframe width="510" height="236" scrolling="no" src="https://thingspeak.com/channels/396140/charts/3?bgcolor=444&dynamic=true&results=60&type=spline&api_key=BFIJ0F04WBQ4ZPN2"></iframe>
+    </li>
+  <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <a href="/main"><img src="/assets/icons/previous-64.png">Main Page</a>
+      <br>
+      <a href="/page1"><img src="/assets/icons/next-64.png">Page1</a>
+      <br>
+      <a href="/page2"><img src="/assets/icons/next-64.png">Page2</a>
+    </li>
+  </ul>
+  </div>
