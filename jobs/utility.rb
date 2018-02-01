@@ -24,6 +24,9 @@ SCHEDULER.every '1m', :first_in => 0 do |job|
       "
     
       unit_rows = db.query(sql)
+      if unit_rows.count == 0
+        send_event('graphutility-'+ utility_name, points: [], day_total_units: 0, units_2_delta: 0)
+      end
     
       unit_items = unit_rows.map do |row|
         #sensor_name = row['sensor_name']
